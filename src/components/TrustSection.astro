@@ -33,7 +33,7 @@ const trustPillars = [
 ];
 ---
 
-<section id="trust" class="py-16 sm:py-20 bg-white border-b border-slate-200/70 relative">
+<section id="trust" class="py-16 sm:py-20 bg-white border-b border-slate-200/70 relative reveal-on-scroll">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Section Header -->
@@ -51,10 +51,10 @@ const trustPillars = [
 
     <!-- Trust Cards Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
-      {trustPillars.map((pillar) => {
+      {trustPillars.map((pillar, index) => {
         const IconComponent = pillar.icon;
         return (
-          <div class="bg-hospital-neutral rounded-2xl p-6 sm:p-7 border border-slate-200/80 shadow-card-elevated flex flex-col justify-between group">
+          <div class={`bg-hospital-neutral rounded-2xl p-6 sm:p-7 border border-slate-200/80 shadow-card-elevated hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group reveal-on-scroll reveal-stagger-${index + 1}`}>
             <div>
               <div class="flex items-center justify-between mb-4">
                 <div class="w-12 h-12 rounded-xl bg-white text-hospital-teal flex items-center justify-center shadow-xs group-hover:bg-hospital-teal group-hover:text-white transition-colors flex-shrink-0">

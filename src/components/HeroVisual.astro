@@ -1,121 +1,140 @@
 ---
-import { Award, Clock, MapPin, ShieldCheck, Stethoscope, UserCheck, Activity } from '@lucide/astro';
+import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
 ---
 
-<div class="relative w-full max-w-lg mx-auto lg:max-w-none select-none">
-  
-  <!-- Outer Ambient Soft Glow Layer -->
-  <div class="absolute -inset-3 bg-gradient-to-tr from-hospital-teal/20 via-hospital-mint/60 to-hospital-navy/10 rounded-3xl blur-2xl opacity-75 transform -rotate-1 scale-95 pointer-events-none"></div>
+<div class="relative w-full max-w-xl mx-auto lg:max-w-none select-none perspective-container" id="hero-visual-wrapper">
+  <!-- Outer Ambient Soft Glow Layer (soft blue & mint lighting matching reference) -->
+  <div class="absolute -inset-4 bg-gradient-to-tr from-hospital-teal/20 via-sky-200/40 to-hospital-mint/60 rounded-[2.5rem] blur-2xl opacity-70 transform -rotate-1 scale-95 pointer-events-none parallax-layer-back" aria-hidden="true"></div>
+  <div class="absolute -top-10 -right-10 w-64 h-64 bg-sky-200/30 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
 
-  <!-- Primary Feature Card Container -->
-  <div class="relative bg-white rounded-3xl p-5 sm:p-7 shadow-card-elevated border border-slate-200/90 overflow-hidden">
-    
-    <!-- Top Clinic Status Bar -->
-    <div class="flex items-center justify-between pb-4 sm:pb-5 border-b border-slate-100">
-      <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-hospital-mint flex items-center justify-center text-hospital-teal flex-shrink-0 shadow-xs">
-          <Stethoscope class="w-6 h-6" aria-hidden="true" />
-        </div>
-        <div>
-          <h3 class="font-bold text-hospital-navy text-sm sm:text-base leading-tight">Welfare Hospital</h3>
-          <p class="text-xs text-hospital-slate flex items-center gap-1 mt-0.5">
-            <MapPin class="w-3 h-3 text-hospital-teal flex-shrink-0" aria-hidden="true" />
-            <span>Ram Bagh, Agra, UP</span>
-          </p>
-        </div>
-      </div>
+  <!-- Primary 3D Tilt Card Container with Layered Parallax -->
+  <div id="hero-3d-card" class="tilt-card relative bg-white/95 backdrop-blur-md rounded-[2rem] p-3 sm:p-4 shadow-2xl border border-white/90 ring-1 ring-hospital-teal/15 transition-shadow duration-300">
+    <!-- Doctor Photograph Container (Accurate 4:3 ratio matching 1200x896 source) -->
+    <div class="relative rounded-[1.6rem] overflow-hidden aspect-[4/3] bg-gradient-to-br from-hospital-mint/60 via-slate-100 to-sky-100/50 hero-photo-wrapper parallax-layer-base">
       
-      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
-        <span>Active Practice</span>
-      </span>
-    </div>
+      <!-- Doctor Real Photograph -->
+      <img
+        src="/images/doctor-hero.jpg"
+        alt="Dr. Opee Rajput - Supervising Physician at Welfare Hospital, Ram Bagh, Agra"
+        class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-[1.03]"
+        loading="eager"
+        fetchpriority="high"
+        width="600"
+        height="448"
+      />
 
-    <!-- Editorial Healthcare Graphic / Clinical Vignette -->
-    <div class="my-5 rounded-2xl bg-gradient-to-b from-hospital-mint/60 via-hospital-neutral to-white border border-slate-200/80 p-5 sm:p-6 text-center relative overflow-hidden">
-      
-      <!-- Decorative medical cross watermark in background -->
-      <div class="absolute -right-6 -bottom-6 opacity-5 pointer-events-none">
-        <svg width="140" height="140" viewBox="0 0 100 100" fill="#102A43">
-          <path d="M40 10H60V40H90V60H60V90H40V60H10V40H40V10Z" />
-        </svg>
+      <!-- Soft gradient vignette for contrast -->
+      <div class="absolute inset-0 bg-gradient-to-t from-hospital-navy/30 via-transparent to-transparent pointer-events-none" aria-hidden="true"></div>
+
+      <!-- Live Clinical Status Pill (Top-Right inside photo, away from doctor's face) -->
+      <div class="absolute top-3 right-3 sm:top-3.5 sm:right-3.5 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-white/95 text-emerald-800 backdrop-blur-md shadow-md border border-emerald-100">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
+        <span>Active OPD Consultations</span>
       </div>
 
-      <div class="relative z-10 flex flex-col items-center">
-        <!-- Physician Avatar Emblem with Subtle Depth -->
-        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white shadow-md flex items-center justify-center text-hospital-teal mb-3.5 ring-4 ring-hospital-mint relative">
-          <UserCheck class="w-9 h-9 sm:w-11 sm:h-11" aria-hidden="true" />
-          <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-white text-[9px] font-bold">
-            ✓
-          </div>
+    </div>
+
+    <!-- Floating Badge 1: Supervising Physician (Top-Left, gentle floating) -->
+    <div class="hidden sm:flex absolute -top-4 -left-4 z-20 glass-card rounded-2xl p-3 shadow-xl border border-white/90 items-center gap-3 animate-float-slow parallax-layer-front">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-hospital-teal to-teal-700 text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+        <Stethoscope class="w-5 h-5" aria-hidden="true" />
+      </div>
+      <div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-xs font-extrabold text-hospital-navy leading-tight">Dr. Opee Rajput</span>
+          <CheckCircle2 class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" aria-hidden="true" />
         </div>
-
-        <h4 class="font-extrabold text-hospital-navy text-base sm:text-lg tracking-tight">
-          Dr. Opee Rajput
-        </h4>
-        <p class="text-xs font-semibold text-hospital-teal mt-0.5">
-          Hospital Owner & Supervising Physician
-        </p>
-        <p class="text-xs text-hospital-slate mt-2 max-w-xs leading-relaxed">
-          Comprehensive clinical assessments, general medical evaluations, and personalized treatment plans.
-        </p>
-
-        <!-- Active Vitals Screening Pill -->
-        <div class="mt-4 inline-flex items-center gap-2 bg-white px-3.5 py-1.5 rounded-full text-xs font-medium text-hospital-navy border border-slate-200 shadow-xs">
-          <Activity class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0 animate-pulse" aria-hidden="true" />
-          <span>In-Person Consultations &bull; 100 Feet Road</span>
-        </div>
+        <div class="text-[10px] text-hospital-slate font-medium">Hospital Owner & Physician</div>
       </div>
     </div>
 
-    <!-- Grounded Experience & Facility Highlights -->
-    <div class="grid grid-cols-2 gap-3 pt-1">
-      <div class="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70 text-left">
-        <div class="text-[11px] font-medium text-hospital-slate">Community History</div>
-        <div class="text-xl sm:text-2xl font-extrabold text-hospital-navy mt-0.5">34 Years</div>
-        <div class="text-[10px] text-slate-500 mt-0.5">In Ram Bagh, Agra*</div>
+    <!-- Floating Badge 2: 34 Years of Dedication (Bottom-Right, subtle reverse float) -->
+    <div class="hidden sm:flex absolute -bottom-4 -right-4 z-20 glass-card rounded-2xl p-3 shadow-xl border border-white/90 items-center gap-3 animate-float-reverse parallax-layer-front">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-hospital-navy to-hospital-navy-light text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+        <Award class="w-5 h-5 text-amber-300" aria-hidden="true" />
       </div>
-
-      <div class="p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/70 text-left">
-        <div class="text-[11px] font-medium text-hospital-slate">Consultation Type</div>
-        <div class="text-xl sm:text-2xl font-extrabold text-hospital-teal mt-0.5">Physician</div>
-        <div class="text-[10px] text-slate-500 mt-0.5">Direct clinical visit</div>
+      <div>
+        <div class="text-xs font-extrabold text-hospital-navy leading-tight">34 Years of Care</div>
+        <div class="text-[10px] text-hospital-slate font-medium">Hospital-reported history in Agra*</div>
       </div>
     </div>
 
-    <!-- Desk Assistance Bottom Ribbon -->
-    <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
-      <span class="text-hospital-slate text-[11px] sm:text-xs">Direct consultation line:</span>
-      <a 
-        href="tel:8490068558" 
-        class="font-bold text-hospital-teal hover:text-hospital-teal-dark hover:underline flex items-center gap-1 min-h-[36px]"
-      >
-        <span>+91 8490068558</span>
-      </a>
-    </div>
-
   </div>
-
-  <!-- Floating Glassmorphic Pill: 34 Years of Experience (Top-right, positioned to not cover content on mobile) -->
-  <div class="hidden sm:flex absolute -top-3.5 -right-3.5 glass-panel rounded-2xl p-3 shadow-lg border border-white items-center gap-3">
-    <div class="w-9 h-9 rounded-xl bg-hospital-teal text-white flex items-center justify-center flex-shrink-0 shadow-xs">
-      <Award class="w-5 h-5" aria-hidden="true" />
-    </div>
-    <div>
-      <div class="text-xs font-bold text-hospital-navy leading-tight">34 Years of Service</div>
-      <div class="text-[10px] text-hospital-slate">Hospital-supplied records*</div>
-    </div>
-  </div>
-
-  <!-- Floating Glassmorphic Pill: Direct In-Person (Bottom-left) -->
-  <div class="hidden sm:flex absolute -bottom-3.5 -left-3.5 glass-panel rounded-2xl p-3 shadow-lg border border-white items-center gap-3">
-    <div class="w-9 h-9 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center flex-shrink-0">
-      <Clock class="w-5 h-5" aria-hidden="true" />
-    </div>
-    <div>
-      <div class="text-xs font-bold text-hospital-navy leading-tight">Flexible Scheduling</div>
-      <div class="text-[10px] text-hospital-slate">Phone or online request</div>
-    </div>
-  </div>
-
 </div>
+
+<script>
+  // Advanced 3D Mouse Tilt with Layered Parallax & Smooth Lerp
+  const wrapper = document.getElementById('hero-visual-wrapper');
+  const card = document.getElementById('hero-3d-card');
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouchDevice = window.matchMedia('(pointer: coarse)').matches;
+  const isPointerFine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  if (wrapper && card && isPointerFine && !isTouchDevice && !prefersReduced) {
+    let bounds: DOMRect | null = null;
+    let isHovering = false;
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let rafId: number | null = null;
+
+    const onMouseEnter = () => {
+      isHovering = true;
+      bounds = wrapper.getBoundingClientRect();
+      startLoop();
+    };
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!bounds) bounds = wrapper.getBoundingClientRect();
+      const mouseX = e.clientX - bounds.left;
+      const mouseY = e.clientY - bounds.top;
+
+      // Clamped normalized coords from -1 to 1
+      const normX = Math.max(-1, Math.min(1, (mouseX / bounds.width) * 2 - 1));
+      const normY = Math.max(-1, Math.min(1, (mouseY / bounds.height) * 2 - 1));
+
+      // Strict, tasteful rotation limit: -3.8deg to +3.8deg
+      targetX = -normY * 3.8;
+      targetY = normX * 3.8;
+    };
+
+    const onMouseLeave = () => {
+      isHovering = false;
+      targetX = 0;
+      targetY = 0;
+    };
+
+    const updateTilt = () => {
+      // Smooth lerp interpolation (factor 0.08)
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+
+      card.style.transform = `perspective(1200px) rotateX(${currentX.toFixed(2)}deg) rotateY(${currentY.toFixed(2)}deg)`;
+
+      // Continue animating until settled near zero
+      const delta = Math.abs(targetX - currentX) + Math.abs(targetY - currentY);
+      if (isHovering || delta > 0.01) {
+        rafId = requestAnimationFrame(updateTilt);
+      } else {
+        card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+        rafId = null;
+      }
+    };
+
+    const startLoop = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(updateTilt);
+      }
+    };
+
+    wrapper.addEventListener('mouseenter', onMouseEnter, { passive: true });
+    wrapper.addEventListener('mousemove', onMouseMove, { passive: true });
+    wrapper.addEventListener('mouseleave', onMouseLeave, { passive: true });
+
+    window.addEventListener('resize', () => {
+      if (wrapper) bounds = wrapper.getBoundingClientRect();
+    }, { passive: true });
+  }
+</script>

@@ -2,7 +2,7 @@
 import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle2 } from '@lucide/astro';
 ---
 
-<section id="doctors" class="py-16 sm:py-20 lg:py-24 bg-hospital-neutral relative overflow-hidden">
+<section id="doctors" class="py-16 sm:py-20 lg:py-24 bg-hospital-neutral relative overflow-hidden reveal-on-scroll">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Section Header -->
@@ -22,12 +22,19 @@ import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       
       <!-- Primary Doctor Card: Dr. Opee Rajput (Owner & Physician) -->
-      <div class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated">
+      <div class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated reveal-on-scroll reveal-stagger-1">
         <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-slate-100">
           
-          <!-- Professional Vector Avatar Placeholder -->
-          <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-hospital-mint border-2 border-hospital-teal/30 flex flex-col items-center justify-center text-hospital-teal flex-shrink-0 relative overflow-hidden shadow-xs">
-            <UserCheck class="w-12 h-12" aria-hidden="true" />
+          <!-- Professional Photo of Lead Physician -->
+          <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-hospital-teal/30 flex-shrink-0 relative overflow-hidden shadow-xs">
+            <img
+              src="/images/doctor-hero.jpg"
+              alt="Dr. Opee Rajput - Welfare Hospital"
+              class="w-full h-full object-cover object-top"
+              loading="lazy"
+              width="112"
+              height="112"
+            />
             <div class="absolute bottom-0 inset-x-0 bg-hospital-navy/95 text-white text-[9px] py-0.5 text-center font-bold tracking-wider uppercase">
               Lead Doctor
             </div>
@@ -106,7 +113,7 @@ import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle
       </div>
 
       <!-- Secondary Placeholder Card: Visiting & Associate Doctors Slot -->
-      <div class="lg:col-span-5 bg-white/80 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-slate-300 flex flex-col justify-between">
+      <div class="lg:col-span-5 bg-white/80 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-slate-300 flex flex-col justify-between reveal-on-scroll reveal-stagger-2">
         <div>
           <div class="w-12 h-12 rounded-2xl bg-slate-100 text-hospital-slate flex items-center justify-center mb-4 flex-shrink-0">
             <PlusCircle class="w-6 h-6 text-hospital-slate" aria-hidden="true" />

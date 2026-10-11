@@ -61,7 +61,7 @@ const services = [
 ];
 ---
 
-<section id="services" class="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200/70 relative">
+<section id="services" class="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200/70 relative reveal-on-scroll">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     
     <!-- Section Header -->
@@ -79,12 +79,12 @@ const services = [
 
     <!-- Services Grid (2 Columns on Tablet & Desktop) -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-      {services.map((service) => {
+      {services.map((service, index) => {
         const IconComponent = service.icon;
         const isVerified = service.statusType === 'verified';
         return (
           <div 
-            class="bg-hospital-neutral rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated flex flex-col justify-between group transition-all"
+            class={`bg-hospital-neutral rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated hover:-translate-y-2 hover:shadow-2xl hover:border-hospital-teal/30 flex flex-col justify-between group transition-all duration-300 reveal-on-scroll reveal-stagger-${index + 1}`}
             id={`card-${service.id}`}
           >
             <div>

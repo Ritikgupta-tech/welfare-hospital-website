@@ -184,6 +184,100 @@ textarea:focus-visible {
   background: #94A3B8;
 }
 
+/* 3D Depth, Perspectives, and Floating Animations */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateZ(36px) translateY(0px);
+  }
+  50% {
+    transform: translateZ(36px) translateY(-6px);
+  }
+}
+
+@keyframes floatReverse {
+  0%, 100% {
+    transform: translateZ(32px) translateY(0px);
+  }
+  50% {
+    transform: translateZ(32px) translateY(6px);
+  }
+}
+
+@keyframes pulseSoft {
+  0%, 100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 7s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 4s ease-in-out infinite;
+}
+
+.perspective-container {
+  perspective: 1200px;
+}
+
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s ease;
+  will-change: transform;
+}
+
+/* Layered 3D Parallax Depths */
+.parallax-layer-back {
+  transform: translateZ(-20px) scale(1.02);
+}
+.parallax-layer-base {
+  transform: translateZ(0px);
+}
+.parallax-layer-front {
+  transform: translateZ(36px);
+}
+
+/* Scroll reveal utilities & Stagger Delays */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-on-scroll.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-stagger-1 { transition-delay: 60ms; }
+.reveal-stagger-2 { transition-delay: 120ms; }
+.reveal-stagger-3 { transition-delay: 180ms; }
+.reveal-stagger-4 { transition-delay: 240ms; }
+
+/* Hero dock & photography visual classes */
+.hero-dock {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 6px -1px rgba(16, 42, 67, 0.03), 0 20px 40px -8px rgba(16, 42, 67, 0.09), 0 0 0 1px rgba(8, 127, 140, 0.08);
+}
+
+.hero-photo-wrapper {
+  box-shadow: 0 20px 50px -10px rgba(16, 42, 67, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.8), 0 0 60px -10px rgba(8, 127, 140, 0.18);
+}
+
 /* Respect user preferences for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -194,5 +288,19 @@ textarea:focus-visible {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal-on-scroll {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .animate-float-slow,
+  .animate-float-reverse,
+  .animate-pulse-soft {
+    animation: none !important;
+  }
+  .tilt-card {
+    transform: none !important;
+    transition: none !important;
   }
 }
