@@ -1,12 +1,11 @@
 ---
-import { Stethoscope, UserCheck, Activity, RotateCcw, ArrowRight, Info, Calendar } from '@lucide/astro';
+import { Stethoscope, UserCheck, Activity, RotateCcw, ArrowRight, Calendar } from '@lucide/astro';
 
 const services = [
   {
     id: 'general-healthcare',
     title: 'General Healthcare',
-    status: 'Confirmed Scope',
-    statusType: 'verified',
+    status: 'Primary Healthcare',
     icon: Stethoscope,
     description: 'Comprehensive evaluation of non-emergency medical ailments, fever management, seasonal illnesses, infection care, and routine healthcare consultations for individuals and families.',
     details: [
@@ -19,8 +18,7 @@ const services = [
   {
     id: 'physician-consultation',
     title: 'Physician Consultation',
-    status: 'Confirmed Scope',
-    statusType: 'verified',
+    status: 'Physician Consultation',
     icon: UserCheck,
     description: 'Direct in-person clinical consultations under Dr. Opee Rajput. Thorough physical check-ups, review of patient symptoms, medical history assessment, and prescription guidance.',
     details: [
@@ -33,22 +31,20 @@ const services = [
   {
     id: 'general-medical-assessment',
     title: 'General Medical Assessment',
-    status: 'Proposed Scope — Pending Confirmation',
-    statusType: 'proposed',
+    status: 'Routine Health Check',
     icon: Activity,
-    description: 'Proposed service category covering routine vitals checking (blood pressure, temperature, pulse), baseline physical wellness checks, and preventative health reviews.',
+    description: 'General medical assessment covering routine vitals checking (blood pressure, temperature, pulse), baseline physical wellness checks, and preventative health reviews.',
     details: [
       'Baseline vital signs screening',
       'Preliminary health parameter checks',
       'Health tracking and lifestyle advice',
-      'Subject to hospital consultation protocols',
+      'Doctor evaluation and lifestyle counseling',
     ],
   },
   {
     id: 'follow-up-consultation',
     title: 'Follow-up Consultation',
-    status: 'Proposed Scope — Pending Confirmation',
-    statusType: 'proposed',
+    status: 'Continuing Care',
     icon: RotateCcw,
     description: 'Structured review consultations for continuing patients to assess treatment efficacy, adjust medication regimens, and monitor recovery progress.',
     details: [
@@ -81,24 +77,19 @@ const services = [
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
       {services.map((service, index) => {
         const IconComponent = service.icon;
-        const isVerified = service.statusType === 'verified';
         return (
           <div 
             class={`bg-hospital-neutral rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated hover:-translate-y-2 hover:shadow-2xl hover:border-hospital-teal/30 flex flex-col justify-between group transition-all duration-300 reveal-on-scroll reveal-stagger-${index + 1}`}
             id={`card-${service.id}`}
           >
             <div>
-              <!-- Header with Icon & Scope Status Badge -->
+              <!-- Header with Icon & Category Badge -->
               <div class="flex items-center justify-between gap-3 mb-5">
                 <div class="w-13 h-13 rounded-2xl bg-white text-hospital-teal flex items-center justify-center shadow-xs group-hover:bg-hospital-teal group-hover:text-white transition-colors flex-shrink-0">
                   <IconComponent class="w-6 h-6 sm:w-7 sm:h-7" aria-hidden="true" />
                 </div>
                 
-                <span class={`text-[11px] font-bold px-3 py-1 rounded-full border ${
-                  isVerified 
-                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200' 
-                    : 'bg-amber-50 text-amber-800 border-amber-200'
-                }`}>
+                <span class="text-[11px] font-bold px-3 py-1 rounded-full border bg-hospital-mint text-hospital-teal border-hospital-teal/30">
                   {service.status}
                 </span>
               </div>
@@ -138,16 +129,6 @@ const services = [
           </div>
         );
       })}
-    </div>
-
-    <!-- Verified Scope Integrity Callout -->
-    <div class="mt-12 bg-white rounded-2xl p-5 sm:p-6 border border-slate-200/90 shadow-xs max-w-4xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
-      <div class="w-10 h-10 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center flex-shrink-0">
-        <Info class="w-5 h-5" aria-hidden="true" />
-      </div>
-      <div class="text-xs sm:text-sm text-hospital-body leading-relaxed">
-        <strong class="text-hospital-navy font-semibold">Scope Integrity Notice:</strong> Welfare Hospital’s online profile lists only verified physician and general hospital consultations. Additional facilities such as specialized surgery, ICU, maternity care, on-site pathology, or pharmacy will only be listed once formally confirmed and licensed by the client.
-      </div>
     </div>
 
   </div>

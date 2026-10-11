@@ -12,16 +12,20 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
     <!-- Doctor Photograph Container (Accurate 4:3 ratio matching 1200x896 source) -->
     <div class="relative rounded-[1.6rem] overflow-hidden aspect-[4/3] bg-gradient-to-br from-hospital-mint/60 via-slate-100 to-sky-100/50 hero-photo-wrapper parallax-layer-base">
       
-      <!-- Doctor Real Photograph -->
-      <img
-        src="/images/doctor-hero.jpg"
-        alt="Dr. Opee Rajput - Supervising Physician at Welfare Hospital, Ram Bagh, Agra"
-        class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-[1.03]"
-        loading="eager"
-        fetchpriority="high"
-        width="600"
-        height="448"
-      />
+      <!-- Doctor Responsive Picture (WebP + JPG fallback) -->
+      <picture>
+        <source srcset="/images/doctor-hero.webp" type="image/webp" />
+        <img
+          src="/images/doctor-hero.jpg"
+          alt="Dr. Opee Rajput - Supervising Physician at Welfare Hospital, Ram Bagh, Agra"
+          class="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-[1.03]"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          width="600"
+          height="448"
+        />
+      </picture>
 
       <!-- Soft gradient vignette for contrast -->
       <div class="absolute inset-0 bg-gradient-to-t from-hospital-navy/30 via-transparent to-transparent pointer-events-none" aria-hidden="true"></div>
@@ -55,7 +59,7 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
       </div>
       <div>
         <div class="text-xs font-extrabold text-hospital-navy leading-tight">34 Years of Care</div>
-        <div class="text-[10px] text-hospital-slate font-medium">Hospital-reported history in Agra*</div>
+        <div class="text-[10px] text-hospital-slate font-medium">Dedicated Service in Agra</div>
       </div>
     </div>
 
@@ -63,7 +67,7 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
 </div>
 
 <script>
-  // Advanced 3D Mouse Tilt with Layered Parallax & Smooth Lerp
+  // Advanced 3D Mouse Tilt with Layered Parallax, Smooth Lerp & Lifecycle Pausing
   const wrapper = document.getElementById('hero-visual-wrapper');
   const card = document.getElementById('hero-3d-card');
 
@@ -74,6 +78,7 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
   if (wrapper && card && isPointerFine && !isTouchDevice && !prefersReduced) {
     let bounds: DOMRect | null = null;
     let isHovering = false;
+    let isVisible = true;
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
@@ -81,12 +86,14 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
     let rafId: number | null = null;
 
     const onMouseEnter = () => {
+      if (!isVisible || document.hidden) return;
       isHovering = true;
       bounds = wrapper.getBoundingClientRect();
       startLoop();
     };
 
     const onMouseMove = (e: MouseEvent) => {
+      if (!isVisible || document.hidden) return;
       if (!bounds) bounds = wrapper.getBoundingClientRect();
       const mouseX = e.clientX - bounds.left;
       const mouseY = e.clientY - bounds.top;
@@ -106,7 +113,22 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
       targetY = 0;
     };
 
+    const stopLoop = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg)';
+      currentX = 0;
+      currentY = 0;
+    };
+
     const updateTilt = () => {
+      if (!isVisible || document.hidden) {
+        stopLoop();
+        return;
+      }
+
       // Smooth lerp interpolation (factor 0.08)
       currentX += (targetX - currentX) * 0.08;
       currentY += (targetY - currentY) * 0.08;
@@ -124,7 +146,7 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
     };
 
     const startLoop = () => {
-      if (rafId === null) {
+      if (rafId === null && isVisible && !document.hidden) {
         rafId = requestAnimationFrame(updateTilt);
       }
     };
@@ -136,5 +158,23 @@ import { Award, Stethoscope, CheckCircle2 } from '@lucide/astro';
     window.addEventListener('resize', () => {
       if (wrapper) bounds = wrapper.getBoundingClientRect();
     }, { passive: true });
+
+    // Pause animation when off-screen
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (!isVisible) {
+          stopLoop();
+        }
+      }, { threshold: 0.05 });
+      observer.observe(wrapper);
+    }
+
+    // Pause animation when tab is inactive / hidden
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopLoop();
+      }
+    });
   }
 </script>

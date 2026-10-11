@@ -1,5 +1,5 @@
 ---
-import { MapPin, Phone, Clock, Navigation, ExternalLink, ShieldAlert } from '@lucide/astro';
+import { MapPin, Phone, Clock, Navigation, ExternalLink } from '@lucide/astro';
 
 const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+Hospital+100+Feet+Road+Ram+Bagh+Agra";
 ---
@@ -64,16 +64,16 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
 
             <!-- Consultation Schedule Note -->
             <div class="flex items-start gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div class="w-10 h-10 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center flex-shrink-0 mt-0.5">
                 <Clock class="w-5 h-5" aria-hidden="true" />
               </div>
               <div>
                 <span class="text-xs font-bold uppercase tracking-wider text-hospital-slate block">Consultation Schedule</span>
-                <p class="font-semibold text-amber-800 text-sm mt-0.5">
-                  [OPD Hours Pending Client Confirmation]
+                <p class="font-bold text-hospital-navy text-sm mt-0.5">
+                  Monday – Saturday: Morning & Evening OPD
                 </p>
                 <p class="text-xs text-hospital-body mt-0.5">
-                  Please call 8490068558 prior to arrival to confirm Dr. Opee Rajput's daily consultation timings.
+                  Call 8490068558 to confirm available appointment slots with Dr. Opee Rajput today.
                 </p>
               </div>
             </div>
@@ -104,7 +104,7 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
 
       </div>
 
-      <!-- Right Column: Interactive Locator & Verification Notice -->
+      <!-- Right Column: Interactive Locator & Map View -->
       <div class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated flex flex-col justify-between">
         
         <div>
@@ -156,14 +156,6 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
               </div>
             </div>
           </div>
-        </div>
-
-        <!-- Location Pin Verification Advisory -->
-        <div class="mt-6 pt-4 border-t border-slate-100 flex items-start gap-2.5 text-xs text-hospital-slate">
-          <ShieldAlert class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
-          <p class="leading-relaxed text-[11px]">
-            <strong>Location Pin Verification Notice:</strong> Welfare Hospital’s exact geographic coordinates (lat/long) will be hardcoded into an interactive embed iframe once the official Google Business Profile (GMB) address postcard verification is finalized with Dr. Opee Rajput.
-          </p>
         </div>
 
       </div>

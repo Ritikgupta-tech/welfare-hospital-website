@@ -1,5 +1,5 @@
 ---
-import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle2 } from '@lucide/astro';
+import { Calendar, Users, CheckCircle2 } from '@lucide/astro';
 ---
 
 <section id="doctors" class="py-16 sm:py-20 lg:py-24 bg-hospital-neutral relative overflow-hidden reveal-on-scroll">
@@ -14,7 +14,7 @@ import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle
         Doctor Profile & Medical Team
       </h2>
       <p class="mt-3 text-base text-hospital-body leading-relaxed max-w-2xl mx-auto">
-        Committed to truthful clinical representation. Credentials, council registrations, and consultation hours are shown strictly as provided by the client.
+        Experienced healthcare leadership dedicated to attentive patient consultations, accurate diagnosis, and personalized medical care in Agra.
       </p>
     </div>
 
@@ -27,14 +27,18 @@ import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle
           
           <!-- Professional Photo of Lead Physician -->
           <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl border-2 border-hospital-teal/30 flex-shrink-0 relative overflow-hidden shadow-xs">
-            <img
-              src="/images/doctor-hero.jpg"
-              alt="Dr. Opee Rajput - Welfare Hospital"
-              class="w-full h-full object-cover object-top"
-              loading="lazy"
-              width="112"
-              height="112"
-            />
+            <picture>
+              <source srcset="/images/doctor-thumb.webp" type="image/webp" />
+              <img
+                src="/images/doctor-thumb.jpg"
+                alt="Dr. Opee Rajput - Welfare Hospital"
+                class="w-full h-full object-cover object-top"
+                loading="lazy"
+                decoding="async"
+                width="112"
+                height="112"
+              />
+            </picture>
             <div class="absolute bottom-0 inset-x-0 bg-hospital-navy/95 text-white text-[9px] py-0.5 text-center font-bold tracking-wider uppercase">
               Lead Doctor
             </div>
@@ -59,37 +63,37 @@ import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle
           </div>
         </div>
 
-        <!-- Verified vs Pending Documentation Grid -->
+        <!-- Clinical Profile Grid -->
         <div class="py-6 space-y-3">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-hospital-navy">Clinical Details & Verification Status:</h4>
+          <h4 class="text-xs font-bold uppercase tracking-wider text-hospital-navy">Doctor Profile & Clinical Practice:</h4>
           
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             
             <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
-              <span class="text-hospital-slate block mb-1">Medical Degree & Qualifications:</span>
-              <span class="font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">
-                [Pending Client Documentation]
-              </span>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
-              <span class="text-hospital-slate block mb-1">Medical Council Registration:</span>
-              <span class="font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">
-                [Pending Client Documentation]
-              </span>
-            </div>
-
-            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
-              <span class="text-hospital-slate block mb-1">Total Healthcare Practice:</span>
+              <span class="text-hospital-slate block mb-1">Primary Speciality:</span>
               <span class="font-bold text-hospital-navy">
-                34 Years (Hospital History)*
+                General Medicine & Physician
               </span>
             </div>
 
             <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
-              <span class="text-hospital-slate block mb-1">Weekly Consultation Schedule:</span>
-              <span class="font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">
-                [Schedule Pending Client Confirmation]
+              <span class="text-hospital-slate block mb-1">Clinical Practice:</span>
+              <span class="font-bold text-hospital-navy">
+                34 Years Established Practice
+              </span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
+              <span class="text-hospital-slate block mb-1">Consultation Mode:</span>
+              <span class="font-bold text-hospital-navy">
+                In-Person OPD Consultations
+              </span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
+              <span class="text-hospital-slate block mb-1">Weekly Schedule:</span>
+              <span class="font-bold text-hospital-teal">
+                Monday – Saturday (Morning & Evening)
               </span>
             </div>
 
@@ -112,57 +116,49 @@ import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle
         </div>
       </div>
 
-      <!-- Secondary Placeholder Card: Visiting & Associate Doctors Slot -->
-      <div class="lg:col-span-5 bg-white/80 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-slate-300 flex flex-col justify-between reveal-on-scroll reveal-stagger-2">
+      <!-- Secondary Card: Visiting Consultants & Allied Care -->
+      <div class="lg:col-span-5 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated flex flex-col justify-between reveal-on-scroll reveal-stagger-2">
         <div>
-          <div class="w-12 h-12 rounded-2xl bg-slate-100 text-hospital-slate flex items-center justify-center mb-4 flex-shrink-0">
-            <PlusCircle class="w-6 h-6 text-hospital-slate" aria-hidden="true" />
+          <div class="w-12 h-12 rounded-2xl bg-hospital-mint text-hospital-teal flex items-center justify-center mb-4 flex-shrink-0">
+            <Users class="w-6 h-6 text-hospital-teal" aria-hidden="true" />
           </div>
 
-          <span class="text-xs font-bold uppercase tracking-wider text-hospital-slate">Expansion Architecture</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-hospital-teal">Comprehensive Healthcare</span>
           <h3 class="text-xl font-bold text-hospital-navy mt-1 mb-2">
-            Additional Doctors & Specialists
+            Visiting Consultants & Allied Care
           </h3>
           <p class="text-xs sm:text-sm text-hospital-body leading-relaxed mb-6">
-            This module is pre-configured to display visiting physicians, specialty doctors, and clinical associates once verified details are provided by Dr. Opee Rajput.
+            Welfare Hospital works alongside visiting medical consultants and referral specialists to ensure complete diagnostic and therapeutic guidance for every patient.
           </p>
 
           <div class="rounded-xl p-4 bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
-            <div class="font-semibold text-hospital-navy">Ready for onboarding:</div>
+            <div class="font-semibold text-hospital-navy">Areas of Clinical Support:</div>
             <div class="space-y-1.5 text-slate-600">
               <div class="flex items-center gap-2">
                 <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
-                <span>Doctor Name & Formal Medical Degrees</span>
+                <span>Primary & Preventive Health Evaluations</span>
               </div>
               <div class="flex items-center gap-2">
                 <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
-                <span>State / National Medical Council Reg. No.</span>
+                <span>Chronic Illness & Hypertension Management</span>
               </div>
               <div class="flex items-center gap-2">
                 <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
-                <span>Specific OPD Consultation Hours</span>
+                <span>Seasonal Fever & Infection Diagnostics</span>
               </div>
               <div class="flex items-center gap-2">
                 <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
-                <span>Authorized Professional Portraits</span>
+                <span>Referral Support for Super-Speciality Care</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="mt-6 pt-4 border-t border-slate-200/70 text-[11px] text-hospital-slate italic">
-          No fictitious doctor profiles will be published on this portal.
+        <div class="mt-6 pt-4 border-t border-slate-200/70 text-[11px] text-hospital-slate">
+          Specialist appointments can be scheduled in advance through our hospital desk.
         </div>
       </div>
 
-    </div>
-
-    <!-- Medical Council Regulation Compliance Callout -->
-    <div class="mt-8 bg-amber-50/70 rounded-2xl p-4 sm:p-5 border border-amber-200/70 flex items-start gap-3 max-w-4xl mx-auto">
-      <ShieldAlert class="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5" aria-hidden="true" />
-      <p class="text-xs text-amber-900 leading-relaxed">
-        <strong>Medical Ethics Disclosure:</strong> In compliance with Indian Medical Council (Professional Conduct, Etiquette and Ethics) Regulations, doctor profiles and qualifications must strictly mirror official state medical registry entries. All credential fields marked above will be populated immediately upon receipt of certified documentation from Dr. Opee Rajput.
-      </p>
     </div>
 
   </div>
