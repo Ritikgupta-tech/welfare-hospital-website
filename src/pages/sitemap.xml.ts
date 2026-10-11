@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async () => {
-  const domain = 'https://welfarehospitalagra.example.com';
+  const domain = 'https://welfare-hospital-website.vercel.app';
   const lastMod = '2026-10-11';
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

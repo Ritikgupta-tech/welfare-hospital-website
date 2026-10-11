@@ -4,7 +4,7 @@ export const GET: APIRoute = async () => {
   const robots = `User-agent: *
 Allow: /
 
-Sitemap: https://welfarehospitalagra.example.com/sitemap.xml
+Sitemap: https://welfare-hospital-website.vercel.app/sitemap.xml
 `;
   return new Response(robots, {
     headers: {
