@@ -1,0 +1,162 @@
+---
+import { UserCheck, Calendar, Clock, Award, ShieldAlert, PlusCircle, CheckCircle2 } from '@lucide/astro';
+---
+
+<section id="doctors" class="py-16 sm:py-20 lg:py-24 bg-hospital-neutral relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-mint text-hospital-teal text-xs font-bold uppercase tracking-wider mb-3">
+        Medical Leadership
+      </div>
+      <h2 class="text-section-title text-hospital-navy font-extrabold tracking-tight">
+        Doctor Profile & Medical Team
+      </h2>
+      <p class="mt-3 text-base text-hospital-body leading-relaxed max-w-2xl mx-auto">
+        Committed to truthful clinical representation. Credentials, council registrations, and consultation hours are shown strictly as provided by the client.
+      </p>
+    </div>
+
+    <!-- Doctor Profiles Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Primary Doctor Card: Dr. Opee Rajput (Owner & Physician) -->
+      <div class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated">
+        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 pb-6 border-b border-slate-100">
+          
+          <!-- Professional Vector Avatar Placeholder -->
+          <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-hospital-mint border-2 border-hospital-teal/30 flex flex-col items-center justify-center text-hospital-teal flex-shrink-0 relative overflow-hidden shadow-xs">
+            <UserCheck class="w-12 h-12" aria-hidden="true" />
+            <div class="absolute bottom-0 inset-x-0 bg-hospital-navy/95 text-white text-[9px] py-0.5 text-center font-bold tracking-wider uppercase">
+              Lead Doctor
+            </div>
+          </div>
+
+          <div class="flex-1 text-center sm:text-left space-y-2">
+            <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-bold bg-hospital-mint text-hospital-teal">
+              <span>Hospital Owner & Supervising Physician</span>
+            </div>
+
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-hospital-navy tracking-tight">
+              Dr. Opee Rajput
+            </h3>
+
+            <p class="text-sm font-semibold text-hospital-teal">
+              General Medicine &bull; Physician Consultation
+            </p>
+
+            <p class="text-xs text-hospital-slate leading-relaxed pt-1">
+              Serving patients at Welfare Hospital, 100 Feet Road, Ram Bagh, Agra. Oversees primary consultations, clinical diagnosis, and patient care management.
+            </p>
+          </div>
+        </div>
+
+        <!-- Verified vs Pending Documentation Grid -->
+        <div class="py-6 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-hospital-navy">Clinical Details & Verification Status:</h4>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            
+            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
+              <span class="text-hospital-slate block mb-1">Medical Degree & Qualifications:</span>
+              <span class="font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">
+                [Pending Client Documentation]
+              </span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
+              <span class="text-hospital-slate block mb-1">Medical Council Registration:</span>
+              <span class="font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">
+                [Pending Client Documentation]
+              </span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
+              <span class="text-hospital-slate block mb-1">Total Healthcare Practice:</span>
+              <span class="font-bold text-hospital-navy">
+                34 Years (Hospital History)*
+              </span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50/90 border border-slate-200/70">
+              <span class="text-hospital-slate block mb-1">Weekly Consultation Schedule:</span>
+              <span class="font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded inline-block">
+                [Schedule Pending Client Confirmation]
+              </span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Direct Consultation CTA -->
+        <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div class="text-xs text-hospital-slate text-center sm:text-left">
+            Request an in-person consultation slot with Dr. Opee Rajput
+          </div>
+
+          <a
+            href="#appointments"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark transition-all shadow-xs min-h-[44px]"
+          >
+            <Calendar class="w-4 h-4" aria-hidden="true" />
+            <span>Request Consultation</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Secondary Placeholder Card: Visiting & Associate Doctors Slot -->
+      <div class="lg:col-span-5 bg-white/80 rounded-3xl p-6 sm:p-8 border-2 border-dashed border-slate-300 flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-2xl bg-slate-100 text-hospital-slate flex items-center justify-center mb-4 flex-shrink-0">
+            <PlusCircle class="w-6 h-6 text-hospital-slate" aria-hidden="true" />
+          </div>
+
+          <span class="text-xs font-bold uppercase tracking-wider text-hospital-slate">Expansion Architecture</span>
+          <h3 class="text-xl font-bold text-hospital-navy mt-1 mb-2">
+            Additional Doctors & Specialists
+          </h3>
+          <p class="text-xs sm:text-sm text-hospital-body leading-relaxed mb-6">
+            This module is pre-configured to display visiting physicians, specialty doctors, and clinical associates once verified details are provided by Dr. Opee Rajput.
+          </p>
+
+          <div class="rounded-xl p-4 bg-slate-50 border border-slate-200/80 space-y-2 text-xs">
+            <div class="font-semibold text-hospital-navy">Ready for onboarding:</div>
+            <div class="space-y-1.5 text-slate-600">
+              <div class="flex items-center gap-2">
+                <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
+                <span>Doctor Name & Formal Medical Degrees</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
+                <span>State / National Medical Council Reg. No.</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
+                <span>Specific OPD Consultation Hours</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <CheckCircle2 class="w-3.5 h-3.5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
+                <span>Authorized Professional Portraits</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-200/70 text-[11px] text-hospital-slate italic">
+          No fictitious doctor profiles will be published on this portal.
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Medical Council Regulation Compliance Callout -->
+    <div class="mt-8 bg-amber-50/70 rounded-2xl p-4 sm:p-5 border border-amber-200/70 flex items-start gap-3 max-w-4xl mx-auto">
+      <ShieldAlert class="w-5 h-5 text-amber-700 flex-shrink-0 mt-0.5" aria-hidden="true" />
+      <p class="text-xs text-amber-900 leading-relaxed">
+        <strong>Medical Ethics Disclosure:</strong> In compliance with Indian Medical Council (Professional Conduct, Etiquette and Ethics) Regulations, doctor profiles and qualifications must strictly mirror official state medical registry entries. All credential fields marked above will be populated immediately upon receipt of certified documentation from Dr. Opee Rajput.
+      </p>
+    </div>
+
+  </div>
+</section>

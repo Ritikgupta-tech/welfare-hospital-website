@@ -1,0 +1,33 @@
+---
+import { Phone, Calendar } from '@lucide/astro';
+---
+
+<!-- Mobile Bottom Floating Action Bar (Visible only on viewports < 768px) -->
+<nav 
+  class="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200/90 p-2.5 sm:p-3 md:hidden shadow-[0_-4px_24px_rgba(16,42,67,0.12)]"
+  aria-label="Mobile Quick Actions"
+>
+  <div class="max-w-md mx-auto grid grid-cols-2 gap-2.5">
+    
+    <!-- Quick Dial Button -->
+    <a
+      href="tel:8490068558"
+      class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs sm:text-sm font-bold text-hospital-navy bg-hospital-mint border border-hospital-teal/30 active:scale-95 transition-transform min-h-[44px]"
+      aria-label="Call Hospital directly: 8490068558"
+    >
+      <Phone class="w-4 h-4 text-hospital-teal flex-shrink-0" aria-hidden="true" />
+      <span>Call Hospital</span>
+    </a>
+
+    <!-- Quick Book Appointment Button -->
+    <a
+      href="#appointments"
+      class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-95 transition-transform shadow-xs min-h-[44px]"
+      aria-label="Jump to Consultation Request Form"
+    >
+      <Calendar class="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+      <span>Book Visit</span>
+    </a>
+
+  </div>
+</nav>

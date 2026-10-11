@@ -1,0 +1,91 @@
+---
+import { Award, Stethoscope, MapPin, HeartHandshake, CheckCircle2 } from '@lucide/astro';
+
+const trustPillars = [
+  {
+    icon: Award,
+    title: '34 Years of Dedication',
+    subtitle: 'Hospital-reported history in Agra',
+    description: 'Providing steady, familiar medical guidance to neighborhood families and individuals since our founding.',
+    badge: 'Established Presence',
+  },
+  {
+    icon: Stethoscope,
+    title: 'Physician Consultations',
+    subtitle: 'Under Dr. Opee Rajput',
+    description: 'Focused clinical assessments, direct physician consultations, and honest medical recommendations.',
+    badge: 'Clinical Care',
+  },
+  {
+    icon: MapPin,
+    title: 'Accessible Ram Bagh Location',
+    subtitle: '100 Feet Road, Agra',
+    description: 'Centrally situated on 100 Feet Road, making in-person visits and follow-ups convenient for Agra residents.',
+    badge: 'Central Access',
+  },
+  {
+    icon: HeartHandshake,
+    title: 'Patient-First Philosophy',
+    subtitle: 'Respectful, transparent care',
+    description: 'Prioritizing clear doctor-patient communication, careful listening, and practical recovery guidance.',
+    badge: 'Ethical Standards',
+  },
+];
+---
+
+<section id="trust" class="py-16 sm:py-20 bg-white border-b border-slate-200/70 relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-mint text-hospital-teal text-xs font-bold uppercase tracking-wider mb-3">
+        Foundations of Care
+      </div>
+      <h2 class="text-section-title text-hospital-navy font-extrabold tracking-tight">
+        A Long-Standing Commitment to Health in Agra
+      </h2>
+      <p class="mt-3 text-base text-hospital-body leading-relaxed max-w-2xl mx-auto">
+        Welfare Hospital operates on core principles of medical honesty, physician accessibility, and compassionate community service.
+      </p>
+    </div>
+
+    <!-- Trust Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
+      {trustPillars.map((pillar) => {
+        const IconComponent = pillar.icon;
+        return (
+          <div class="bg-hospital-neutral rounded-2xl p-6 sm:p-7 border border-slate-200/80 shadow-card-elevated flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="w-12 h-12 rounded-xl bg-white text-hospital-teal flex items-center justify-center shadow-xs group-hover:bg-hospital-teal group-hover:text-white transition-colors flex-shrink-0">
+                  <IconComponent class="w-6 h-6" aria-hidden="true" />
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white text-hospital-slate border border-slate-200">
+                  {pillar.badge}
+                </span>
+              </div>
+
+              <h3 class="text-card-title font-bold text-hospital-navy group-hover:text-hospital-teal transition-colors">
+                {pillar.title}
+              </h3>
+              
+              <div class="text-xs font-semibold text-hospital-teal mt-0.5 mb-2.5">
+                {pillar.subtitle}
+              </div>
+
+              <p class="text-sm text-hospital-body leading-relaxed">
+                {pillar.description}
+              </p>
+            </div>
+
+            <div class="mt-5 pt-3.5 border-t border-slate-200/70 flex items-center gap-1.5 text-xs text-hospital-slate">
+              <CheckCircle2 class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" aria-hidden="true" />
+              <span>Verified Hospital Scope</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+  </div>
+</section>

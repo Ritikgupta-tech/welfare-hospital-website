@@ -1,0 +1,39 @@
+---
+import { Phone, MapPin, ShieldCheck } from '@lucide/astro';
+---
+
+<div class="bg-hospital-navy text-white text-xs border-b border-hospital-navy-light/40 py-2 sm:py-2.5 px-3 sm:px-4 transition-colors">
+  <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-2">
+    
+    <!-- Verified Contact & Location -->
+    <div class="flex items-center flex-wrap gap-x-4 sm:gap-x-6 gap-y-1.5 justify-center md:justify-start text-center sm:text-left">
+      <a 
+        href="tel:8490068558" 
+        class="inline-flex items-center gap-1.5 py-1 text-slate-200 hover:text-hospital-teal-light focus-visible:ring-1 focus-visible:ring-hospital-teal-light rounded transition-colors font-medium touch-manipulation min-h-[36px]"
+        aria-label="Call Welfare Hospital direct line: +91 8490068558"
+      >
+        <Phone class="w-3.5 h-3.5 text-hospital-teal-light flex-shrink-0" aria-hidden="true" />
+        <span class="tracking-wide font-semibold">+91 8490068558</span>
+      </a>
+
+      <span class="hidden sm:inline-block text-slate-600" aria-hidden="true">|</span>
+
+      <div class="inline-flex items-center gap-1.5 py-1 text-slate-300">
+        <MapPin class="w-3.5 h-3.5 text-hospital-teal-light flex-shrink-0" aria-hidden="true" />
+        <span class="text-[11px] sm:text-xs">100 Feet Road, Ram Bagh, Agra, UP</span>
+      </div>
+    </div>
+
+    <!-- Prototype Status & Transparency Notice -->
+    <div class="flex items-center gap-2 justify-center md:justify-end flex-wrap">
+      <span class="inline-flex items-center gap-1.5 bg-hospital-teal/20 text-hospital-mint border border-hospital-teal/40 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-medium tracking-wide">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" aria-hidden="true"></span>
+        Official Website Prototype &bull; Client Review
+      </span>
+      <span class="hidden lg:inline-block text-slate-400 text-[11px]">
+        Supervising Doctor: Dr. Opee Rajput
+      </span>
+    </div>
+
+  </div>
+</div>

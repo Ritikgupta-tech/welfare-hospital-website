@@ -1,0 +1,87 @@
+---
+import { ShieldCheck, HeartHandshake, MapPin, Clock, CheckCircle } from '@lucide/astro';
+
+const reasons = [
+  {
+    icon: ShieldCheck,
+    title: '34 Years of Community Presence',
+    description: 'Providing steady, familiar medical guidance to generations of local families in Agra with honest medical integrity.',
+  },
+  {
+    icon: HeartHandshake,
+    title: 'Direct Physician Attention',
+    description: 'Consultations supervised by Dr. Opee Rajput, focusing on thorough clinical history reviews rather than rushed examinations.',
+  },
+  {
+    icon: MapPin,
+    title: 'Accessible Ram Bagh Location',
+    description: 'Conveniently situated on 100 Feet Road in Ram Bagh, Agra, with clear road connectivity for routine outpatient visits.',
+  },
+  {
+    icon: Clock,
+    title: 'Straightforward Appointment Requests',
+    description: 'Direct phone booking or online request portal with prompt front-desk verification and zero hidden consultation charges.',
+  },
+];
+---
+
+<section id="why-us" class="py-16 sm:py-20 lg:py-24 bg-hospital-navy text-white relative overflow-hidden">
+  
+  <!-- Subtle ambient decorative glow spheres -->
+  <div class="absolute -top-24 -left-24 w-96 h-96 bg-hospital-teal/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+  <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-hospital-mint/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-teal/20 text-hospital-mint border border-hospital-teal/30 text-xs font-bold uppercase tracking-wider mb-3">
+        Patient-Centered Care
+      </div>
+      <h2 class="text-section-title text-white font-extrabold tracking-tight">
+        Why Patients Rely on Welfare Hospital
+      </h2>
+      <p class="mt-3 text-base text-slate-300 leading-relaxed max-w-2xl mx-auto">
+        Our reputation is built entirely on authentic healthcare delivery, ethical clinical consultations, and transparent communication.
+      </p>
+    </div>
+
+    <!-- 4 Grounded Pillars Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-7">
+      {reasons.map((item, index) => {
+        const IconComponent = item.icon;
+        return (
+          <div class="bg-hospital-navy-light/60 backdrop-blur-md rounded-2xl p-6 sm:p-7 border border-slate-700/60 shadow-lg hover:border-hospital-teal/50 hover:bg-hospital-navy-light/90 transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <div class="w-12 h-12 rounded-xl bg-hospital-teal/20 text-hospital-teal-light flex items-center justify-center group-hover:bg-hospital-teal group-hover:text-white transition-colors flex-shrink-0">
+                  <IconComponent class="w-6 h-6" aria-hidden="true" />
+                </div>
+                <span class="text-slate-400 font-mono text-xs font-bold">0{index + 1}</span>
+              </div>
+
+              <h3 class="text-lg font-bold text-white mb-2.5 group-hover:text-hospital-mint transition-colors">
+                {item.title}
+              </h3>
+
+              <p class="text-sm text-slate-300 leading-relaxed">
+                {item.description}
+              </p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-700/60 flex items-center gap-2 text-xs text-hospital-mint">
+              <CheckCircle class="w-4 h-4 text-hospital-teal-light flex-shrink-0" aria-hidden="true" />
+              <span>Grounded Client Fact</span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <!-- Credibility Assurance Note -->
+    <div class="mt-12 text-center text-xs text-slate-400 max-w-2xl mx-auto">
+      Notice: Welfare Hospital upholds clinical honesty. We do not advertise unsubstantiated cure rates, fake reviews, or commercial exaggerations.
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,120 @@
+---
+import { ChevronDown, HelpCircle, Phone, Calendar } from '@lucide/astro';
+
+const faqs = [
+  {
+    question: 'How can I request an appointment?',
+    answer: 'You can submit an online appointment request through the booking form on this website by providing the patient’s name, contact number, preferred date, and time slot. Alternatively, you can directly call the hospital desk at 8490068558 to request a consultation with Dr. Opee Rajput.',
+  },
+  {
+    question: 'Where is Welfare Hospital located?',
+    answer: 'Welfare Hospital is located on 100 Feet Road, Ram Bagh, Agra, Uttar Pradesh, India. The location is easily accessible from all key parts of Agra. You can click the "Get Directions" button on our contact section to open the location query directly in Google Maps.',
+  },
+  {
+    question: 'Which medical services are available?',
+    answer: 'Our confirmed medical scope includes General Healthcare and Physician Consultations supervised by Dr. Opee Rajput. We also propose routine General Medical Assessments and Follow-up Consultations pending formal hospital sign-off. Specialized facilities (such as surgeries, ICU, or on-site diagnostic pathology) are subject to client confirmation and will be published once officially authorized.',
+  },
+  {
+    question: 'How can I contact the hospital?',
+    answer: 'You can contact Welfare Hospital directly by phone at +91 8490068558. For general inquiries, doctor availability, and appointment scheduling, please call during regular clinic hours.',
+  },
+  {
+    question: 'Is my appointment confirmed immediately upon submitting the form?',
+    answer: 'No. Submitting the online form registers an appointment request. Our hospital desk reviews doctor availability and will call your 10-digit mobile number to confirm your scheduled consultation slot. Please note that this website is an informational prototype and does not represent an automated instant booking system.',
+  },
+  {
+    question: 'Which doctors are available for consultation?',
+    answer: 'Dr. Opee Rajput is the lead physician and owner of Welfare Hospital. Consultation schedules, qualifications, and visiting specialist timings will be updated and published on this website following formal client review.',
+  },
+];
+---
+
+<section id="faq" class="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200/70 relative">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-mint text-hospital-teal text-xs font-bold uppercase tracking-wider mb-3">
+        Common Questions
+      </div>
+      <h2 class="text-section-title text-hospital-navy font-extrabold tracking-tight">
+        Frequently Asked Questions
+      </h2>
+      <p class="mt-3 text-base text-hospital-body leading-relaxed">
+        Straightforward, transparent answers regarding consultations, location, and hospital services.
+      </p>
+    </div>
+
+    <!-- Accordion List -->
+    <div class="space-y-3.5" id="faq-accordion">
+      {faqs.map((faq, index) => (
+        <div class="border border-slate-200/90 rounded-2xl overflow-hidden bg-hospital-neutral transition-all faq-item">
+          <button
+            type="button"
+            class="faq-trigger w-full px-5 sm:px-6 py-4.5 sm:py-5 text-left font-bold text-hospital-navy hover:text-hospital-teal text-base sm:text-lg flex items-center justify-between gap-4 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal min-h-[56px] cursor-pointer"
+            aria-expanded={index === 0 ? "true" : "false"}
+            aria-controls={`faq-answer-${index}`}
+            id={`faq-btn-${index}`}
+          >
+            <span class="pr-2">{faq.question}</span>
+            <ChevronDown class={`w-5 h-5 text-hospital-teal flex-shrink-0 transition-transform duration-300 faq-icon ${index === 0 ? "rotate-180" : ""}`} aria-hidden="true" />
+          </button>
+          
+          <div
+            id={`faq-answer-${index}`}
+            role="region"
+            aria-labelledby={`faq-btn-${index}`}
+            class={`accordion-content ${index === 0 ? "open" : ""}`}
+          >
+            <div class="accordion-inner px-5 sm:px-6 pb-5 sm:pb-6 text-sm sm:text-base text-hospital-body leading-relaxed">
+              <div class="pt-2 border-t border-slate-200/60">
+                {faq.answer}
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Additional Inquiries Callout -->
+    <div class="mt-12 bg-hospital-neutral rounded-2xl p-5 sm:p-6 border border-slate-200/80 text-center flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="text-left">
+        <h4 class="font-bold text-hospital-navy text-sm sm:text-base">Have a different question?</h4>
+        <p class="text-xs sm:text-sm text-hospital-slate mt-0.5">Reach out to our front desk for immediate clarification.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <a
+          href="tel:8490068558"
+          class="inline-flex items-center gap-2 px-4.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark transition-all shadow-xs min-h-[44px]"
+          aria-label="Call +91 8490068558"
+        >
+          <Phone class="w-4 h-4" aria-hidden="true" />
+          <span>Call 8490068558</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<script>
+  const triggers = document.querySelectorAll('.faq-trigger');
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+      const contentId = trigger.getAttribute('aria-controls');
+      const content = contentId ? document.getElementById(contentId) : null;
+      const icon = trigger.querySelector('.faq-icon');
+
+      if (isExpanded) {
+        trigger.setAttribute('aria-expanded', 'false');
+        content?.classList.remove('open');
+        icon?.classList.remove('rotate-180');
+      } else {
+        trigger.setAttribute('aria-expanded', 'true');
+        content?.classList.add('open');
+        icon?.classList.add('rotate-180');
+      }
+    });
+  });
+</script>

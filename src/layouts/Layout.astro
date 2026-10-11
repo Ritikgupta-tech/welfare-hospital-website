@@ -1,0 +1,61 @@
+---
+import '../styles/global.css';
+import AnnouncementBar from '../components/AnnouncementBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileFloatingBar from '../components/MobileFloatingBar.astro';
+import SeoMeta from '../components/SeoMeta.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#102A43" />
+    
+    <!-- Preconnect to Google Fonts for Manrope & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+    <SeoMeta title={title} description={description} />
+  </head>
+  <body class="bg-hospital-neutral text-hospital-navy font-sans antialiased selection:bg-hospital-teal selection:text-white min-h-screen flex flex-col">
+    
+    <!-- Accessibility Skip Link -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2.5 focus:bg-hospital-navy focus:text-white focus:rounded-xl focus:shadow-xl focus:ring-2 focus:ring-hospital-teal"
+    >
+      Skip to main content
+    </a>
+
+    <!-- Top Announcement Bar -->
+    <AnnouncementBar />
+
+    <!-- Main Navigation Header -->
+    <Header />
+
+    <!-- Main Content Landmark -->
+    <main id="main-content" class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Footer Landmark -->
+    <Footer />
+
+    <!-- Mobile Sticky Floating Actions (Visible only on mobile devices) -->
+    <MobileFloatingBar />
+
+  </body>
+</html>

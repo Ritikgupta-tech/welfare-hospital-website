@@ -1,0 +1,174 @@
+---
+import { MapPin, Phone, Clock, Navigation, ExternalLink, ShieldAlert } from '@lucide/astro';
+
+const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+Hospital+100+Feet+Road+Ram+Bagh+Agra";
+---
+
+<section id="contact" class="py-16 sm:py-20 lg:py-24 bg-hospital-neutral relative">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-mint text-hospital-teal text-xs font-bold uppercase tracking-wider mb-3">
+        Hospital Location & Contact
+      </div>
+      <h2 class="text-section-title text-hospital-navy font-extrabold tracking-tight">
+        Visit Welfare Hospital in Agra
+      </h2>
+      <p class="mt-3 text-base text-hospital-body leading-relaxed max-w-2xl mx-auto">
+        Located on 100 Feet Road in Ram Bagh, Agra. Reach us by phone or open directions directly in Google Maps.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+      
+      <!-- Left Column: Verified Contact Details Card -->
+      <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+        
+        <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated space-y-6">
+          <h3 class="text-xl font-bold text-hospital-navy pb-3 border-b border-slate-100 flex items-center justify-between">
+            <span>Verified Contact Information</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500" aria-hidden="true"></span>
+          </h3>
+
+          <div class="space-y-5 text-sm">
+            <!-- Full Address -->
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center flex-shrink-0 mt-0.5">
+                <MapPin class="w-5 h-5" aria-hidden="true" />
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-hospital-slate block">Hospital Address</span>
+                <p class="font-bold text-hospital-navy text-base mt-0.5">Welfare Hospital</p>
+                <p class="text-hospital-body text-sm mt-0.5">100 Feet Road, Ram Bagh, Agra, Uttar Pradesh, India</p>
+              </div>
+            </div>
+
+            <!-- Phone Line -->
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Phone class="w-5 h-5" aria-hidden="true" />
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-hospital-slate block">Direct Hospital Telephone</span>
+                <a 
+                  href="tel:8490068558" 
+                  class="font-extrabold text-hospital-teal text-xl hover:underline mt-0.5 inline-block min-h-[36px]"
+                  aria-label="Call Welfare Hospital: 8490068558"
+                >
+                  +91 8490068558
+                </a>
+                <p class="text-xs text-hospital-slate mt-0.5">Supervising Physician & Owner: Dr. Opee Rajput</p>
+              </div>
+            </div>
+
+            <!-- Consultation Schedule Note -->
+            <div class="flex items-start gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <Clock class="w-5 h-5" aria-hidden="true" />
+              </div>
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-hospital-slate block">Consultation Schedule</span>
+                <p class="font-semibold text-amber-800 text-sm mt-0.5">
+                  [OPD Hours Pending Client Confirmation]
+                </p>
+                <p class="text-xs text-hospital-body mt-0.5">
+                  Please call 8490068558 prior to arrival to confirm Dr. Opee Rajput's daily consultation timings.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CTAs: Call Now & Google Maps Directions -->
+          <div class="pt-2 flex flex-col sm:flex-row gap-3">
+            <a
+              href="tel:8490068558"
+              class="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark transition-all shadow-xs min-h-[44px]"
+            >
+              <Phone class="w-4 h-4" aria-hidden="true" />
+              <span>Call 8490068558</span>
+            </a>
+
+            <a
+              href={mapsSearchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-hospital-navy bg-hospital-mint hover:bg-hospital-mint-light transition-all border border-hospital-teal/30 min-h-[44px]"
+            >
+              <Navigation class="w-4 h-4 text-hospital-teal" aria-hidden="true" />
+              <span>Get Directions</span>
+              <ExternalLink class="w-3.5 h-3.5 text-hospital-teal" aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Interactive Locator & Verification Notice -->
+      <div class="lg:col-span-7 bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-card-elevated flex flex-col justify-between">
+        
+        <div>
+          <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100 flex-wrap gap-2">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-hospital-teal">Interactive Locator</span>
+              <h3 class="text-xl font-bold text-hospital-navy">Ram Bagh, Agra Map Search</h3>
+            </div>
+            <a
+              href={mapsSearchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-xs font-bold text-hospital-teal hover:underline inline-flex items-center gap-1 min-h-[36px]"
+            >
+              <span>Open in Google Maps</span>
+              <ExternalLink class="w-3.5 h-3.5" aria-hidden="true" />
+            </a>
+          </div>
+
+          <!-- Simulated Map Graphic Container -->
+          <div class="relative w-full h-72 sm:h-80 rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden flex flex-col items-center justify-center p-6 text-center">
+            
+            <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#102A43_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
+            
+            <div class="absolute inset-x-8 top-1/2 -translate-y-1/2 h-4 bg-slate-200/80 rounded border-y border-slate-300 pointer-events-none" aria-hidden="true"></div>
+            <div class="absolute inset-y-6 left-1/3 w-4 bg-slate-200/80 rounded border-x border-slate-300 pointer-events-none" aria-hidden="true"></div>
+
+            <div class="relative z-10 max-w-sm space-y-3">
+              <div class="w-14 h-14 rounded-2xl bg-hospital-navy text-white flex items-center justify-center mx-auto shadow-lg ring-4 ring-white animate-bounce duration-1000">
+                <MapPin class="w-7 h-7 text-hospital-teal-light" aria-hidden="true" />
+              </div>
+
+              <div>
+                <h4 class="font-extrabold text-hospital-navy text-base">Welfare Hospital</h4>
+                <p class="text-xs text-hospital-slate mt-0.5">100 Feet Road, Ram Bagh, Agra</p>
+              </div>
+
+              <div class="pt-1">
+                <a
+                  href={mapsSearchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark shadow-md transition-all min-h-[44px]"
+                >
+                  <Navigation class="w-4 h-4" aria-hidden="true" />
+                  <span>Search Route on Google Maps</span>
+                  <ExternalLink class="w-3.5 h-3.5" aria-hidden="true" />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location Pin Verification Advisory -->
+        <div class="mt-6 pt-4 border-t border-slate-100 flex items-start gap-2.5 text-xs text-hospital-slate">
+          <ShieldAlert class="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <p class="leading-relaxed text-[11px]">
+            <strong>Location Pin Verification Notice:</strong> Welfare Hospital’s exact geographic coordinates (lat/long) will be hardcoded into an interactive embed iframe once the official Google Business Profile (GMB) address postcard verification is finalized with Dr. Opee Rajput.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>

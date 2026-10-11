@@ -1,0 +1,146 @@
+---
+import { CheckCircle2, Calendar, Phone, FileText, ArrowRight, ShieldCheck } from '@lucide/astro';
+
+const verifiedCommitments = [
+  'Direct clinical consultations and medical evaluations with Dr. Opee Rajput',
+  'Careful clinical history review before suggesting treatment plans',
+  'Patient-focused communication in Hindi and English',
+  'Conveniently accessible premises on 100 Feet Road, Ram Bagh, Agra',
+  'Prompt appointment request coordination via phone and online portal',
+];
+---
+
+<section id="about" class="py-16 sm:py-20 lg:py-24 bg-hospital-neutral relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+      
+      <!-- Left Column: Institutional Profile & Documentation Status -->
+      <div class="lg:col-span-5 order-2 lg:order-1">
+        <div class="relative max-w-lg mx-auto lg:max-w-none">
+          
+          <!-- Outer Soft Decorative Halo -->
+          <div class="absolute -inset-2 bg-gradient-to-tr from-hospital-teal/15 to-hospital-navy/10 rounded-3xl blur-xl pointer-events-none" aria-hidden="true"></div>
+
+          <!-- Main Profile Card -->
+          <div class="relative bg-white rounded-3xl p-6 sm:p-8 shadow-card-elevated border border-slate-200/90 space-y-6">
+            
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-hospital-teal">Institutional Profile</span>
+                <h3 class="text-xl font-extrabold text-hospital-navy mt-0.5">Welfare Hospital</h3>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-hospital-mint text-hospital-teal border border-hospital-teal/20">
+                Agra, UP
+              </span>
+            </div>
+
+            <!-- Profile Parameters -->
+            <div class="space-y-3 text-sm">
+              <div class="flex items-start justify-between py-1.5 border-b border-slate-100 gap-2">
+                <span class="text-hospital-slate text-xs sm:text-sm">Supervising Doctor:</span>
+                <span class="font-bold text-hospital-navy text-right text-xs sm:text-sm">Dr. Opee Rajput</span>
+              </div>
+
+              <div class="flex items-start justify-between py-1.5 border-b border-slate-100 gap-2">
+                <span class="text-hospital-slate text-xs sm:text-sm">Clinical Category:</span>
+                <span class="font-semibold text-hospital-navy text-right text-xs sm:text-sm">General Hospital &bull; Physician</span>
+              </div>
+
+              <div class="flex items-start justify-between py-1.5 border-b border-slate-100 gap-2">
+                <span class="text-hospital-slate text-xs sm:text-sm">Experience Record:</span>
+                <span class="font-semibold text-hospital-navy text-right text-xs sm:text-sm">34 Years of Service*</span>
+              </div>
+
+              <div class="flex items-start justify-between py-1.5 border-b border-slate-100 gap-2">
+                <span class="text-hospital-slate text-xs sm:text-sm">Primary Location:</span>
+                <span class="font-semibold text-hospital-navy text-right text-xs sm:text-sm max-w-[200px]">100 Feet Rd, Ram Bagh, Agra</span>
+              </div>
+
+              <div class="flex items-start justify-between py-1.5 gap-2">
+                <span class="text-hospital-slate text-xs sm:text-sm">Direct Phone Line:</span>
+                <a 
+                  href="tel:8490068558" 
+                  class="font-bold text-hospital-teal hover:underline text-xs sm:text-sm"
+                  aria-label="Call +91 8490068558"
+                >
+                  +91 8490068558
+                </a>
+              </div>
+            </div>
+
+            <!-- Verification Scope Box -->
+            <div class="rounded-2xl p-4 bg-amber-50/80 border border-amber-200 text-amber-900 text-xs space-y-1.5">
+              <div class="flex items-center gap-1.5 font-bold text-amber-800">
+                <FileText class="w-4 h-4 text-amber-700 flex-shrink-0" aria-hidden="true" />
+                <span>Verification Scope Notice</span>
+              </div>
+              <p class="text-amber-800 leading-relaxed text-[11px]">
+                Doctor registration credentials, official establishment certification, and operational department timetables will be published upon client sign-off.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Narrative Copy & Hospital Standards -->
+      <div class="lg:col-span-7 order-1 lg:order-2 space-y-6">
+        
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-mint text-hospital-teal text-xs font-bold uppercase tracking-wider">
+          About Welfare Hospital
+        </div>
+
+        <h2 class="text-section-title text-hospital-navy font-extrabold tracking-tight">
+          A Legacy of Practical, Dependable Healthcare for Agra Families
+        </h2>
+
+        <div class="space-y-4 text-base text-hospital-body leading-relaxed max-w-prose">
+          <p>
+            For <strong class="text-hospital-navy font-semibold">34 years</strong>, Welfare Hospital has remained a trusted neighborhood healthcare anchor in <strong class="text-hospital-navy font-semibold">Ram Bagh, Agra</strong>. Founded on the principle that quality healthcare should be transparent, accessible, and grounded in direct doctor-patient interaction, we assist individuals and families with common illnesses, general medical assessments, and ongoing physical wellness.
+          </p>
+          <p>
+            Under the guidance of <strong class="text-hospital-navy font-semibold">Dr. Opee Rajput</strong>, we focus on listening attentively to each patient's medical symptoms, conducting careful physical examinations, and recommending clear, practical treatment steps without unnecessary confusion or excessive procedures.
+          </p>
+        </div>
+
+        <!-- Healthcare Standards Checklist -->
+        <div class="pt-2 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-hospital-navy">Our Healthcare Standards:</h4>
+          <ul class="space-y-2.5">
+            {verifiedCommitments.map((item) => (
+              <li class="flex items-start gap-2.5 text-sm text-hospital-navy">
+                <CheckCircle2 class="w-4 h-4 text-hospital-teal flex-shrink-0 mt-0.5" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- Action CTAs -->
+        <div class="pt-3 flex flex-wrap items-center gap-3.5">
+          <a
+            href="#appointments"
+            class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.98] transition-all shadow-md shadow-hospital-teal/20 min-h-[44px] focus-visible:ring-2 focus-visible:ring-hospital-teal"
+          >
+            <Calendar class="w-4 h-4" aria-hidden="true" />
+            <span>Request Consultation</span>
+            <ArrowRight class="w-4 h-4" aria-hidden="true" />
+          </a>
+
+          <a
+            href="tel:8490068558"
+            class="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-bold text-hospital-navy bg-white hover:bg-slate-50 transition-all border border-slate-300 min-h-[44px] focus-visible:ring-2 focus-visible:ring-hospital-teal"
+            aria-label="Call Welfare Hospital: 8490068558"
+          >
+            <Phone class="w-4 h-4 text-hospital-teal" aria-hidden="true" />
+            <span>Call: 8490068558</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>

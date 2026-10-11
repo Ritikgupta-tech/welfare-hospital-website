@@ -1,0 +1,73 @@
+---
+interface Props {
+  variant?: 'light' | 'dark';
+  size?: 'sm' | 'md' | 'lg';
+  showSubtitle?: boolean;
+}
+
+const { variant = 'dark', size = 'md', showSubtitle = true } = Astro.props;
+
+const isLight = variant === 'light';
+const primaryColor = isLight ? '#FFFFFF' : '#102A43';
+const tealColor = isLight ? '#38BDF8' : '#087F8C';
+const subtitleColor = isLight ? '#94A3B8' : '#62748A';
+
+const sizeMap = {
+  sm: { icon: 32, titleClass: 'text-sm sm:text-base font-bold tracking-tight', subClass: 'text-[9px]' },
+  md: { icon: 38, titleClass: 'text-base sm:text-lg font-bold tracking-tight leading-tight', subClass: 'text-[9px] sm:text-[10px]' },
+  lg: { icon: 48, titleClass: 'text-xl sm:text-2xl font-bold tracking-tight leading-tight', subClass: 'text-xs' },
+};
+
+const currentSize = sizeMap[size];
+---
+
+<div class="flex items-center gap-2.5 sm:gap-3 select-none">
+  <!-- Custom Healthcare Emblem: Medical Cross entwined with Care Arc & Shield -->
+  <div class="relative flex-shrink-0" style={`width: ${currentSize.icon}px; height: ${currentSize.icon}px;`}>
+    <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-xs" aria-hidden="true">
+      <defs>
+        <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#087F8C" />
+          <stop offset="100%" stop-color="#102A43" />
+        </linearGradient>
+        <linearGradient id="crossGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#E8F7F4" />
+          <stop offset="100%" stop-color="#FFFFFF" />
+        </linearGradient>
+      </defs>
+      
+      <!-- Outer Shield / Care Base with Rounded Geometry -->
+      <path
+        d="M50 8C68 8 88 16 88 38C88 64 56 88 50 92C44 88 12 64 12 38C12 16 32 8 50 8Z"
+        fill="url(#shieldGrad)"
+        fill-opacity={isLight ? "0.35" : "1"}
+      />
+      
+      <!-- Inner Medical Cross with Soft Rounded Ends -->
+      <path
+        d="M44 26C44 24.3431 45.3431 23 47 23H53C54.6569 23 56 24.3431 56 26V44H74C75.6569 44 77 45.3431 77 47V53C77 54.6569 75.6569 56 74 56H56V74C56 75.6569 54.6569 77 53 77H47C45.3431 77 44 75.6569 44 74V56H26C24.3431 56 23 54.6569 23 53V47C23 45.3431 24.3431 44 26 44H44V26Z"
+        fill="url(#crossGrad)"
+      />
+
+      <!-- Organic Healthcare Care Arc -->
+      <path
+        d="M32 44C32 37 38 32 46 32C52 32 57 36 60 41"
+        stroke="#38BDF8"
+        stroke-width="3"
+        stroke-linecap="round"
+        stroke-dasharray="2 4"
+      />
+    </svg>
+  </div>
+
+  <div class="flex flex-col min-w-0">
+    <span class={`${currentSize.titleClass} truncate`} style={`color: ${primaryColor};`}>
+      WELFARE <span style={`color: ${tealColor};`}>HOSPITAL</span>
+    </span>
+    {showSubtitle && (
+      <span class={`${currentSize.subClass} font-semibold uppercase tracking-wider hidden xs:block truncate`} style={`color: ${subtitleColor};`}>
+        Ram Bagh, Agra &bull; 34 Years of Care
+      </span>
+    )}
+  </div>
+</div>

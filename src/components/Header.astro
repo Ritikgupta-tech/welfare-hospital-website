@@ -1,0 +1,203 @@
+---
+import Logo from './Logo.astro';
+import { Calendar, Phone, Menu, X } from '@lucide/astro';
+
+const navLinks = [
+  { name: 'Home', href: '#hero' },
+  { name: 'About', href: '#about' },
+  { name: 'Services', href: '#services' },
+  { name: 'Doctors', href: '#doctors' },
+  { name: 'Why Us', href: '#why-us' },
+  { name: 'FAQ', href: '#faq' },
+  { name: 'Contact', href: '#contact' },
+];
+---
+
+<header id="main-header" class="sticky top-0 z-50 glass-nav transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-20">
+      
+      <!-- Brand Logo -->
+      <a 
+        href="#hero" 
+        class="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal rounded-xl p-1 -ml-1 transition-transform hover:scale-[1.01] min-h-[44px]" 
+        aria-label="Welfare Hospital Agra - Back to top"
+      >
+        <Logo size="md" />
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-7" aria-label="Main Navigation">
+        {navLinks.map((link) => (
+          <a
+            href={link.href}
+            class="text-sm font-semibold text-hospital-navy hover:text-hospital-teal transition-colors tracking-wide py-2 relative after:content-[''] after:absolute after:bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-hospital-teal after:transition-all hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal rounded"
+          >
+            {link.name}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Desktop CTAs -->
+      <div class="hidden sm:flex items-center gap-3">
+        <a
+          href="tel:8490068558"
+          class="hidden md:inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-hospital-navy bg-hospital-mint hover:bg-hospital-mint-light transition-all border border-hospital-teal/25 min-h-[44px]"
+          title="Direct Call to Welfare Hospital"
+          aria-label="Call Welfare Hospital at 8490068558"
+        >
+          <Phone class="w-4 h-4 text-hospital-teal flex-shrink-0" aria-hidden="true" />
+          <span>Call Hospital</span>
+        </a>
+
+        <a
+          href="#appointments"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.98] transition-all shadow-md shadow-hospital-teal/20 min-h-[44px]"
+        >
+          <Calendar class="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+          <span>Book Appointment</span>
+        </a>
+      </div>
+
+      <!-- Mobile Controls (Quick Dial + Hamburger) -->
+      <div class="flex items-center gap-2 lg:hidden">
+        <a
+          href="tel:8490068558"
+          class="sm:hidden p-2.5 rounded-xl text-hospital-navy bg-hospital-mint border border-hospital-teal/20 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Direct Phone Call to 8490068558"
+        >
+          <Phone class="w-4 h-4 text-hospital-teal" aria-hidden="true" />
+        </a>
+
+        <button
+          id="mobile-menu-toggle"
+          type="button"
+          class="p-2.5 rounded-xl text-hospital-navy hover:bg-slate-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Open Navigation Menu"
+          aria-expanded="false"
+          aria-controls="mobile-nav-drawer"
+        >
+          <span id="menu-icon-open"><Menu class="w-6 h-6" aria-hidden="true" /></span>
+          <span id="menu-icon-close" class="hidden"><X class="w-6 h-6" aria-hidden="true" /></span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Mobile Backdrop Overlay -->
+  <div
+    id="mobile-menu-backdrop"
+    class="fixed inset-0 bg-hospital-navy/60 backdrop-blur-xs z-40 hidden lg:hidden transition-opacity"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Mobile Navigation Drawer -->
+  <div
+    id="mobile-nav-drawer"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Mobile Navigation"
+    class="hidden lg:hidden fixed inset-x-0 top-20 z-50 bg-white/98 backdrop-blur-xl border-b border-slate-200/90 px-5 pt-3 pb-8 space-y-4 shadow-2xl max-h-[calc(100vh-5rem)] overflow-y-auto"
+  >
+    <div class="flex flex-col space-y-1.5 pt-2">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="mobile-nav-link px-4 py-3 rounded-xl text-base font-semibold text-hospital-navy hover:bg-hospital-mint hover:text-hospital-teal transition-all min-h-[44px] flex items-center focus-visible:ring-2 focus-visible:ring-hospital-teal"
+        >
+          {link.name}
+        </a>
+      ))}
+    </div>
+
+    <div class="pt-4 border-t border-slate-100 flex flex-col gap-3">
+      <a
+        href="tel:8490068558"
+        class="mobile-nav-link flex items-center justify-center gap-2.5 py-3.5 px-4 rounded-xl text-sm font-semibold text-hospital-navy bg-hospital-mint border border-hospital-teal/25 min-h-[48px]"
+      >
+        <Phone class="w-4 h-4 text-hospital-teal" aria-hidden="true" />
+        <span>Direct Call: +91 8490068558</span>
+      </a>
+
+      <a
+        href="#appointments"
+        class="mobile-nav-link flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark shadow-md min-h-[48px]"
+      >
+        <Calendar class="w-4 h-4" aria-hidden="true" />
+        <span>Request Appointment</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-toggle');
+  const drawer = document.getElementById('mobile-nav-drawer');
+  const backdrop = document.getElementById('mobile-menu-backdrop');
+  const iconOpen = document.getElementById('menu-icon-open');
+  const iconClose = document.getElementById('menu-icon-close');
+  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+  function openMenu() {
+    menuBtn?.setAttribute('aria-expanded', 'true');
+    menuBtn?.setAttribute('aria-label', 'Close Navigation Menu');
+    drawer?.classList.remove('hidden');
+    backdrop?.classList.remove('hidden');
+    iconOpen?.classList.add('hidden');
+    iconClose?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+
+    // Focus first link in drawer for keyboard accessibility
+    const firstLink = drawer?.querySelector('a') as HTMLElement | null;
+    firstLink?.focus();
+  }
+
+  function closeMenu() {
+    menuBtn?.setAttribute('aria-expanded', 'false');
+    menuBtn?.setAttribute('aria-label', 'Open Navigation Menu');
+    drawer?.classList.add('hidden');
+    backdrop?.classList.remove('hidden');
+    backdrop?.classList.add('hidden');
+    iconOpen?.classList.remove('hidden');
+    iconClose?.classList.add('hidden');
+    document.body.style.overflow = '';
+    menuBtn?.focus();
+  }
+
+  function toggleMenu() {
+    const isExpanded = menuBtn?.getAttribute('aria-expanded') === 'true';
+    if (isExpanded) {
+      closeMenu();
+    } else {
+      openMenu();
+    }
+  }
+
+  menuBtn?.addEventListener('click', toggleMenu);
+  backdrop?.addEventListener('click', closeMenu);
+
+  // Close when navigation link is clicked
+  mobileLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      closeMenu();
+    });
+  });
+
+  // Keyboard accessibility: Escape key to close menu
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menuBtn?.getAttribute('aria-expanded') === 'true') {
+      closeMenu();
+    }
+  });
+
+  // Header scroll shadow elevation
+  const header = document.getElementById('main-header');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 20) {
+      header?.classList.add('shadow-md');
+    } else {
+      header?.classList.remove('shadow-md');
+    }
+  }, { passive: true });
+</script>

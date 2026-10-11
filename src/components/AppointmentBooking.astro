@@ -1,0 +1,590 @@
+---
+import { Calendar, Phone, Clock, User, Mail, FileText, CheckCircle2, AlertCircle, ShieldCheck, MapPin, Sparkles } from '@lucide/astro';
+---
+
+<section id="appointments" class="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200/70 relative scroll-mt-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <!-- Section Header -->
+    <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-mint text-hospital-teal text-xs font-bold uppercase tracking-wider mb-3">
+        Book a Visit
+      </div>
+      <h2 class="text-section-title text-hospital-navy font-extrabold tracking-tight">
+        Request a Medical Consultation
+      </h2>
+      <p class="mt-3 text-base text-hospital-body leading-relaxed max-w-2xl mx-auto">
+        Submit your preferred consultation details. Our hospital desk will contact you to confirm physician availability and schedule your slot.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      
+      <!-- Left Column: Interactive Appointment Form -->
+      <div class="lg:col-span-7 bg-hospital-neutral rounded-3xl p-6 sm:p-8 lg:p-10 border border-slate-200/90 shadow-card-elevated">
+        
+        <div class="mb-6 pb-4 border-b border-slate-200/80 flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-bold text-hospital-navy">Appointment Request Form</h3>
+            <p class="text-xs text-hospital-slate mt-0.5">Please provide patient details accurately</p>
+          </div>
+          <span class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200">
+            Secure Portal
+          </span>
+        </div>
+
+        <!-- Dynamic Form Error Banner -->
+        <div 
+          id="form-error-banner" 
+          role="alert" 
+          aria-live="polite" 
+          class="hidden mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-red-800 text-xs flex items-start gap-2.5"
+        >
+          <AlertCircle class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <div id="form-error-text">Please review and correct the highlighted fields below.</div>
+        </div>
+
+        <form id="appointment-form" novalidate class="space-y-5">
+          
+          <!-- Full Name -->
+          <div>
+            <label for="patientName" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+              Patient Full Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="patientName"
+              name="patientName"
+              autocomplete="name"
+              required
+              minlength="3"
+              placeholder="e.g. Rajesh Kumar"
+              class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-hospital-navy placeholder:text-slate-400 text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all min-h-[44px]"
+              aria-describedby="patientName-error"
+            />
+            <p id="patientName-error" class="hidden text-xs text-red-600 mt-1 font-medium">Please enter the patient's full name (minimum 3 characters).</p>
+          </div>
+
+          <!-- Contact Details (2 Columns on Tablet/Desktop) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+            
+            <!-- Mobile Number -->
+            <div>
+              <label for="mobileNumber" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+                Mobile Number <span class="text-red-500">*</span>
+              </label>
+              <div class="relative flex">
+                <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-slate-300 bg-slate-100 text-slate-700 text-sm font-semibold select-none min-h-[44px]">
+                  +91
+                </span>
+                <input
+                  type="tel"
+                  id="mobileNumber"
+                  name="mobileNumber"
+                  autocomplete="tel"
+                  required
+                  pattern="[6-9][0-9]{9}"
+                  maxlength="10"
+                  inputmode="numeric"
+                  placeholder="8490068558"
+                  class="w-full px-4 py-3 rounded-r-xl bg-white border border-slate-300 text-hospital-navy placeholder:text-slate-400 text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all min-h-[44px]"
+                  aria-describedby="mobileNumber-error"
+                />
+              </div>
+              <p id="mobileNumber-error" class="hidden text-xs text-red-600 mt-1 font-medium">Enter a valid 10-digit Indian phone number (starting with 6, 7, 8, or 9).</p>
+            </div>
+
+            <!-- Email Address (Optional) -->
+            <div>
+              <label for="patientEmail" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+                Email Address <span class="text-slate-400 font-normal lowercase">(optional)</span>
+              </label>
+              <input
+                type="email"
+                id="patientEmail"
+                name="patientEmail"
+                autocomplete="email"
+                placeholder="rajesh@example.com"
+                class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-hospital-navy placeholder:text-slate-400 text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all min-h-[44px]"
+                aria-describedby="patientEmail-error"
+              />
+              <p id="patientEmail-error" class="hidden text-xs text-red-600 mt-1 font-medium">Please enter a valid email address.</p>
+            </div>
+
+          </div>
+
+          <!-- Doctor & Service Selection -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+            
+            <!-- Preferred Doctor -->
+            <div>
+              <label for="preferredDoctor" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+                Preferred Doctor <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="preferredDoctor"
+                name="preferredDoctor"
+                required
+                class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-hospital-navy text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all min-h-[44px] cursor-pointer"
+              >
+                <option value="Dr. Opee Rajput (Lead Physician)">Dr. Opee Rajput (Lead Physician)</option>
+                <option value="Doctor preference not specified">Doctor preference not specified</option>
+              </select>
+            </div>
+
+            <!-- Requested Service -->
+            <div>
+              <label for="requestedService" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+                Requested Service <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="requestedService"
+                name="requestedService"
+                required
+                class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-hospital-navy text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all min-h-[44px] cursor-pointer"
+              >
+                <option value="General Healthcare">General Healthcare</option>
+                <option value="Physician Consultation">Physician Consultation</option>
+                <option value="General Medical Assessment">General Medical Assessment (Proposed)</option>
+                <option value="Follow-up Consultation">Follow-up Consultation (Proposed)</option>
+              </select>
+            </div>
+
+          </div>
+
+          <!-- Date & Time Slot -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+            
+            <!-- Preferred Date -->
+            <div>
+              <label for="preferredDate" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+                Preferred Date <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                id="preferredDate"
+                name="preferredDate"
+                required
+                class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-hospital-navy text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all min-h-[44px]"
+                aria-describedby="preferredDate-error"
+              />
+              <p id="preferredDate-error" class="hidden text-xs text-red-600 mt-1 font-medium">Please select a valid upcoming date.</p>
+            </div>
+
+            <!-- Preferred Time Slot -->
+            <div>
+              <label for="preferredSlot" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+                Preferred Time Slot <span class="text-red-500">*</span>
+              </label>
+              <select
+                id="preferredSlot"
+                name="preferredSlot"
+                required
+                class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-hospital-navy text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all min-h-[44px] cursor-pointer"
+              >
+                <option value="Morning (09:00 AM - 12:00 PM)">Morning (09:00 AM - 12:00 PM)*</option>
+                <option value="Afternoon (12:00 PM - 04:00 PM)">Afternoon (12:00 PM - 04:00 PM)*</option>
+                <option value="Evening (05:00 PM - 08:00 PM)">Evening (05:00 PM - 08:00 PM)*</option>
+              </select>
+              <span class="text-[10px] text-slate-500 mt-1 block">* Subject to clinic availability</span>
+            </div>
+
+          </div>
+
+          <!-- Consultation Brief Reason -->
+          <div>
+            <label for="consultationReason" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+              Reason for Consultation <span class="text-slate-400 font-normal lowercase">(brief summary)</span>
+            </label>
+            <textarea
+              id="consultationReason"
+              name="consultationReason"
+              rows="2"
+              placeholder="e.g. Mild fever, persistent cough, routine health checkup..."
+              class="w-full px-4 py-3 rounded-xl bg-white border border-slate-300 text-hospital-navy placeholder:text-slate-400 text-sm focus:border-hospital-teal focus:ring-2 focus:ring-hospital-teal/30 focus:outline-none transition-all"
+            ></textarea>
+          </div>
+
+          <!-- Patient Consent Checkbox -->
+          <div class="pt-1">
+            <label class="flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                id="consentCheck"
+                name="consentCheck"
+                required
+                class="mt-1 w-4 h-4 rounded text-hospital-teal focus:ring-hospital-teal border-slate-300 cursor-pointer min-h-[16px] min-w-[16px]"
+              />
+              <span class="text-xs text-hospital-body leading-relaxed">
+                I understand this submission is an <strong class="text-hospital-navy">appointment request</strong>, not a confirmed booking. Welfare Hospital staff will contact me to confirm doctor availability. I agree to the processing of this consultation request.
+              </span>
+            </label>
+            <p id="consentCheck-error" class="hidden text-xs text-red-600 mt-1 font-medium pl-7">Please check the consent box to proceed.</p>
+          </div>
+
+          <!-- Confidentiality Notice -->
+          <div class="p-3.5 bg-white/90 rounded-xl border border-slate-200/80 text-[11px] text-hospital-slate flex items-start gap-2.5">
+            <ShieldCheck class="w-4 h-4 text-hospital-teal flex-shrink-0 mt-0.5" aria-hidden="true" />
+            <span>
+              <strong>Privacy Assurance:</strong> We respect patient confidentiality. In the live production system, submitted details are routed exclusively to hospital administrative staff and Dr. Opee Rajput.
+            </span>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-2">
+            <button
+              type="submit"
+              id="submit-btn"
+              class="w-full py-3.5 px-6 rounded-xl text-base font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.99] transition-all shadow-md shadow-hospital-teal/20 flex items-center justify-center gap-2 cursor-pointer min-h-[48px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal"
+            >
+              <span id="btn-text" class="flex items-center gap-2">
+                <Calendar class="w-5 h-5" aria-hidden="true" />
+                <span>Submit Appointment Request</span>
+              </span>
+              <span id="btn-spinner" class="hidden items-center gap-2">
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                </svg>
+                <span>Processing Request...</span>
+              </span>
+            </button>
+          </div>
+
+        </form>
+
+      </div>
+
+      <!-- Right Column: Direct Dial Card & What Happens Next -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Direct Phone Assistance Card -->
+        <div class="bg-hospital-navy text-white rounded-3xl p-6 sm:p-8 shadow-card-elevated relative overflow-hidden">
+          <div class="absolute -right-8 -bottom-8 w-44 h-44 bg-hospital-teal/20 rounded-full blur-2xl pointer-events-none" aria-hidden="true"></div>
+
+          <div class="relative z-10 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-wider text-hospital-teal-light">Immediate Desk Support</span>
+            <h3 class="text-2xl font-bold tracking-tight">Prefer Booking by Phone?</h3>
+            <p class="text-sm text-slate-300 leading-relaxed">
+              If you require a same-day consultation or wish to speak with our front desk directly, please call Dr. Opee Rajput’s hospital contact line.
+            </p>
+
+            <div class="pt-1">
+              <a
+                href="tel:8490068558"
+                class="inline-flex items-center gap-3 px-5 py-3.5 rounded-xl bg-hospital-teal hover:bg-hospital-teal-light text-white font-bold text-lg transition-colors shadow-md w-full justify-center sm:justify-start min-h-[48px] focus-visible:ring-2 focus-visible:ring-hospital-mint"
+                aria-label="Call +91 8490068558"
+              >
+                <Phone class="w-5 h-5 text-white flex-shrink-0" aria-hidden="true" />
+                <span>+91 8490068558</span>
+              </a>
+            </div>
+
+            <div class="pt-4 border-t border-slate-700/60 text-xs text-slate-300 space-y-2">
+              <div class="flex items-center gap-2">
+                <MapPin class="w-4 h-4 text-hospital-teal-light flex-shrink-0" aria-hidden="true" />
+                <span>100 Feet Road, Ram Bagh, Agra</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <Clock class="w-4 h-4 text-hospital-teal-light flex-shrink-0" aria-hidden="true" />
+                <span>Hours: To be confirmed by Dr. Rajput</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointment Protocol Guidance -->
+        <div class="bg-hospital-neutral rounded-3xl p-6 border border-slate-200/90 space-y-4">
+          <h4 class="font-bold text-hospital-navy text-base">What happens after you submit?</h4>
+          
+          <div class="space-y-3.5 text-xs sm:text-sm text-hospital-body">
+            <div class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-white text-hospital-teal font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200 shadow-xs">1</div>
+              <p><strong class="text-hospital-navy">Desk Review:</strong> Our desk reviews patient information and requested consultation details.</p>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-white text-hospital-teal font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200 shadow-xs">2</div>
+              <p><strong class="text-hospital-navy">Confirmation Call:</strong> We call your 10-digit number to confirm doctor availability and time.</p>
+            </div>
+
+            <div class="flex items-start gap-3">
+              <div class="w-6 h-6 rounded-full bg-white text-hospital-teal font-bold flex items-center justify-center flex-shrink-0 text-xs border border-slate-200 shadow-xs">3</div>
+              <p><strong class="text-hospital-navy">Clinic Arrival:</strong> Visit 100 Feet Road, Ram Bagh, Agra for your in-person medical evaluation.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Emergency Advisory Banner -->
+        <div class="rounded-2xl p-4 bg-red-50/80 border border-red-200 text-red-900 text-xs flex items-start gap-2.5">
+          <AlertCircle class="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+          <p class="leading-relaxed">
+            <strong>Emergency Advisory:</strong> This online request form is for non-critical, scheduled consultations only. If you or a family member has severe trauma, acute chest pain, or breathing emergency, please call 112 or proceed immediately to the nearest emergency room.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Interactive Submission Success Modal -->
+  <div 
+    id="submission-modal" 
+    role="dialog" 
+    aria-modal="true" 
+    aria-labelledby="modal-title"
+    class="fixed inset-0 z-50 bg-hospital-navy/70 backdrop-blur-sm hidden items-center justify-center p-4"
+  >
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative animate-in fade-in zoom-in duration-200">
+      
+      <div class="text-center space-y-3">
+        <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2 shadow-xs">
+          <CheckCircle2 class="w-9 h-9" aria-hidden="true" />
+        </div>
+
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-hospital-mint text-hospital-teal border border-hospital-teal/20">
+          <Sparkles class="w-3.5 h-3.5" aria-hidden="true" />
+          Demo Submission Logged
+        </span>
+
+        <h3 id="modal-title" class="text-2xl font-extrabold text-hospital-navy">
+          Appointment Request Received
+        </h3>
+
+        <!-- Clear Honest Prototype Disclosure Notice -->
+        <div class="p-3.5 bg-amber-50 border border-amber-200 rounded-2xl text-left text-xs text-amber-900 space-y-1">
+          <div class="font-bold flex items-center gap-1.5 text-amber-800">
+            <AlertCircle class="w-4 h-4 flex-shrink-0" aria-hidden="true" />
+            <span>Prototype Demonstration Notice:</span>
+          </div>
+          <p class="text-[11px] leading-relaxed text-amber-800">
+            This is a website prototype client demonstration. No real notification has been dispatched to Dr. Opee Rajput yet, and no appointment slot is officially reserved until the live hospital SMS/WhatsApp backend is integrated upon client launch.
+          </p>
+        </div>
+
+        <!-- Submitted Summary Ticket -->
+        <div class="bg-slate-50 rounded-2xl p-4 text-left text-xs space-y-2 border border-slate-200/80">
+          <div class="flex justify-between pb-1.5 border-b border-slate-200 font-medium">
+            <span class="text-hospital-slate">Request Reference:</span>
+            <span id="summary-ticket-id" class="font-mono font-bold text-hospital-teal">WFH-AGRA-DEMO</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-100">
+            <span class="text-hospital-slate">Patient Name:</span>
+            <span id="summary-name" class="font-semibold text-hospital-navy">-</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-100">
+            <span class="text-hospital-slate">Contact Phone:</span>
+            <span id="summary-phone" class="font-semibold text-hospital-navy">-</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-100">
+            <span class="text-hospital-slate">Doctor Requested:</span>
+            <span id="summary-doctor" class="font-semibold text-hospital-navy">-</span>
+          </div>
+          <div class="flex justify-between py-1 border-b border-slate-100">
+            <span class="text-hospital-slate">Requested Service:</span>
+            <span id="summary-service" class="font-semibold text-hospital-navy">-</span>
+          </div>
+          <div class="flex justify-between pt-1 font-medium">
+            <span class="text-hospital-slate">Preferred Slot:</span>
+            <span id="summary-slot" class="font-semibold text-hospital-navy">-</span>
+          </div>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="pt-3 flex flex-col sm:flex-row gap-3">
+          <a
+            href="tel:8490068558"
+            class="flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-hospital-navy bg-hospital-mint border border-hospital-teal/30 hover:bg-hospital-mint-light transition-all flex items-center justify-center gap-2 min-h-[44px]"
+          >
+            <Phone class="w-4 h-4 text-hospital-teal" aria-hidden="true" />
+            <span>Call 8490068558</span>
+          </a>
+
+          <button
+            type="button"
+            id="close-modal-btn"
+            class="flex-1 py-3 px-4 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark transition-all min-h-[44px] cursor-pointer"
+          >
+            Close & Return to Site
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  const dateInput = document.getElementById('preferredDate') as HTMLInputElement | null;
+  if (dateInput) {
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+    dateInput.value = today;
+  }
+
+  const form = document.getElementById('appointment-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+  const btnText = document.getElementById('btn-text');
+  const btnSpinner = document.getElementById('btn-spinner');
+  const errorBanner = document.getElementById('form-error-banner');
+  const errorBannerText = document.getElementById('form-error-text');
+
+  const patientNameInput = document.getElementById('patientName') as HTMLInputElement | null;
+  const mobileInput = document.getElementById('mobileNumber') as HTMLInputElement | null;
+  const emailInput = document.getElementById('patientEmail') as HTMLInputElement | null;
+  const preferredDoctorInput = document.getElementById('preferredDoctor') as HTMLSelectElement | null;
+  const requestedServiceInput = document.getElementById('requestedService') as HTMLSelectElement | null;
+  const preferredSlotInput = document.getElementById('preferredSlot') as HTMLSelectElement | null;
+  const consentCheck = document.getElementById('consentCheck') as HTMLInputElement | null;
+
+  const modal = document.getElementById('submission-modal');
+  const closeModalBtn = document.getElementById('close-modal-btn');
+  const summaryTicket = document.getElementById('summary-ticket-id');
+  const summaryName = document.getElementById('summary-name');
+  const summaryPhone = document.getElementById('summary-phone');
+  const summaryDoctor = document.getElementById('summary-doctor');
+  const summaryService = document.getElementById('summary-service');
+  const summarySlot = document.getElementById('summary-slot');
+
+  let isSubmitting = false;
+
+  function setFieldState(input: HTMLInputElement | null, errorId: string, isValid: boolean): boolean {
+    const errorElem = document.getElementById(errorId);
+    if (!input) return false;
+    if (!isValid) {
+      input.classList.add('border-red-500', 'bg-red-50/20');
+      input.setAttribute('aria-invalid', 'true');
+      errorElem?.classList.remove('hidden');
+      return false;
+    } else {
+      input.classList.remove('border-red-500', 'bg-red-50/20');
+      input.removeAttribute('aria-invalid');
+      errorElem?.classList.add('hidden');
+      return true;
+    }
+  }
+
+  patientNameInput?.addEventListener('blur', () => {
+    setFieldState(patientNameInput, 'patientName-error', (patientNameInput.value.trim().length >= 3));
+  });
+
+  mobileInput?.addEventListener('input', () => {
+    mobileInput.value = mobileInput.value.replace(/[^0-9]/g, '');
+  });
+
+  mobileInput?.addEventListener('blur', () => {
+    const val = mobileInput.value.trim();
+    const phoneRegex = /^[6-9]\d{9}$/;
+    setFieldState(mobileInput, 'mobileNumber-error', phoneRegex.test(val));
+  });
+
+  dateInput?.addEventListener('change', () => {
+    if (dateInput.value) {
+      const selected = new Date(dateInput.value);
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      setFieldState(dateInput, 'preferredDate-error', selected >= now);
+    }
+  });
+
+  consentCheck?.addEventListener('change', () => {
+    setFieldState(consentCheck, 'consentCheck-error', consentCheck.checked);
+  });
+
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const nameValid = setFieldState(patientNameInput, 'patientName-error', Boolean(patientNameInput && patientNameInput.value.trim().length >= 3));
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const phoneValid = setFieldState(mobileInput, 'mobileNumber-error', Boolean(mobileInput && phoneRegex.test(mobileInput.value.trim())));
+    
+    let dateValid = true;
+    if (dateInput) {
+      const selected = new Date(dateInput.value);
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      dateValid = setFieldState(dateInput, 'preferredDate-error', selected >= now);
+    }
+
+    const consentValid = setFieldState(consentCheck, 'consentCheck-error', Boolean(consentCheck && consentCheck.checked));
+
+    let emailValid = true;
+    if (emailInput && emailInput.value.trim().length > 0) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      emailValid = setFieldState(emailInput, 'patientEmail-error', emailRegex.test(emailInput.value.trim()));
+    }
+
+    if (!nameValid || !phoneValid || !dateValid || !consentValid || !emailValid) {
+      if (errorBanner) {
+        errorBanner.classList.remove('hidden');
+        if (errorBannerText) errorBannerText.innerText = 'Please review and correct the highlighted fields before submitting.';
+      }
+      return;
+    }
+
+    if (errorBanner) errorBanner.classList.add('hidden');
+
+    isSubmitting = true;
+    if (submitBtn) submitBtn.disabled = true;
+    btnText?.classList.add('hidden');
+    btnSpinner?.classList.remove('hidden');
+    btnSpinner?.classList.add('flex');
+
+    setTimeout(() => {
+      isSubmitting = false;
+      if (submitBtn) submitBtn.disabled = false;
+      btnText?.classList.remove('hidden');
+      btnSpinner?.classList.add('hidden');
+      btnSpinner?.classList.remove('flex');
+
+      const randomTicketNum = Math.floor(1000 + Math.random() * 9000);
+      if (summaryTicket) summaryTicket.innerText = `WFH-AGRA-${randomTicketNum}`;
+      if (summaryName && patientNameInput) summaryName.innerText = patientNameInput.value.trim();
+      if (summaryPhone && mobileInput) summaryPhone.innerText = `+91 ${mobileInput.value.trim()}`;
+      if (summaryDoctor && preferredDoctorInput) summaryDoctor.innerText = preferredDoctorInput.value;
+      if (summaryService && requestedServiceInput) summaryService.innerText = requestedServiceInput.value;
+      if (summarySlot && preferredSlotInput && dateInput) {
+        summarySlot.innerText = `${dateInput.value} • ${preferredSlotInput.value.split('*')[0]}`;
+      }
+
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        closeModalBtn?.focus();
+      }
+
+      form.reset();
+      if (dateInput) {
+        dateInput.value = new Date().toISOString().split('T')[0];
+      }
+    }, 600);
+  });
+
+  closeModalBtn?.addEventListener('click', () => {
+    if (modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      submitBtn?.focus();
+    }
+  });
+
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      submitBtn?.focus();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      submitBtn?.focus();
+    }
+  });
+</script>
