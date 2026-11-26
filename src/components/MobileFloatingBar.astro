@@ -1,5 +1,9 @@
 ---
 import { Phone, Calendar } from '@lucide/astro';
+
+const pathname = Astro.url.pathname;
+const isHome = pathname === '/' || pathname === '';
+const appointmentHref = isHome ? '#appointments' : '/appointments';
 ---
 
 <!-- Mobile Bottom Floating Action Bar (Visible only on viewports < 768px) -->
@@ -22,8 +26,8 @@ import { Phone, Calendar } from '@lucide/astro';
 
     <!-- Quick Book Appointment Button -->
     <a
-      href="#appointments"
-      class="flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-95 transition-transform shadow-xs min-h-[44px]"
+      href={appointmentHref}
+      class="btn-luxury flex items-center justify-center gap-2 py-3 px-3 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-95 transition-transform shadow-xs min-h-[44px]"
       aria-label="Jump to Consultation Request Form"
     >
       <Calendar class="w-4 h-4 flex-shrink-0" aria-hidden="true" />

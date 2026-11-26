@@ -41,9 +41,9 @@ const miniFeatures = [
       <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
         
         <!-- Eyebrow Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-xs border border-hospital-teal/30 text-hospital-teal text-xs sm:text-sm font-bold tracking-wide shadow-xs">
-          <ShieldCheck class="w-4 h-4 text-hospital-teal flex-shrink-0" aria-hidden="true" />
-          <span>Trusted Healthcare in Agra &bull; Ram Bagh</span>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-hospital-teal/30 text-hospital-teal text-xs sm:text-sm font-bold tracking-wide shadow-xs badge-shimmer">
+          <Award class="w-4 h-4 text-amber-500 flex-shrink-0" aria-hidden="true" />
+          <span>34 Years of Clinical Trust &bull; Ram Bagh, Agra</span>
         </div>
 
         <!-- Main Headline with Fluid Typography -->
@@ -53,22 +53,22 @@ const miniFeatures = [
             <span class="text-hospital-teal">Your Health</span> Comes First.
           </h1>
           <!-- Sleek Accent Bar matching reference -->
-          <div class="w-16 h-1.5 bg-gradient-to-r from-hospital-teal via-teal-400 to-sky-400 rounded-full mt-3.5 mb-5 mx-auto lg:mx-0"></div>
+          <div class="w-20 h-1.5 bg-gradient-to-r from-hospital-teal via-teal-400 to-sky-400 rounded-full mt-3.5 mb-5 mx-auto lg:mx-0"></div>
         </div>
 
         <!-- Supporting Value Copy -->
         <p class="text-base sm:text-lg text-hospital-body max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-          Welfare Hospital brings <strong class="text-hospital-navy font-semibold">34 years of healthcare dedication</strong>
-          to patients and families across Agra. Under the clinical supervision of
+          Welfare Hospital brings <strong class="text-hospital-navy font-semibold">34 years of continuous healthcare service</strong>
+          to Agra families. Under the direct supervision of
           <strong class="text-hospital-navy font-semibold">Dr. Opee Rajput</strong>,
-          we provide dependable general medicine, personalized physician consultations, and honest recovery guidance.
+          we provide unhurried physician consultations, accurate diagnoses, and trusted family medicine on 100 Feet Road.
         </p>
 
         <!-- Primary & Secondary Pill CTAs -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-2">
           <a
             href="#appointments"
-            class="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full text-sm sm:text-base font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.98] transition-all shadow-lg shadow-hospital-teal/25 hover:shadow-xl hover:shadow-hospital-teal/35 hover:-translate-y-0.5 min-h-[48px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal"
+            class="btn-luxury inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-full text-sm sm:text-base font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.98] transition-all shadow-lg shadow-hospital-teal/25 hover:shadow-xl hover:shadow-hospital-teal/35 hover:-translate-y-0.5 min-h-[48px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal"
           >
             <Calendar class="w-5 h-5 flex-shrink-0" aria-hidden="true" />
             <span>Book an Appointment</span>
@@ -81,7 +81,7 @@ const miniFeatures = [
             aria-label="Call Welfare Hospital direct: 8490068558"
           >
             <Phone class="w-5 h-5 text-hospital-teal flex-shrink-0" aria-hidden="true" />
-            <span>Call Hospital</span>
+            <span>Call +91 8490068558</span>
           </a>
         </div>
 
@@ -90,7 +90,7 @@ const miniFeatures = [
           {miniFeatures.map((feat) => {
             const Icon = feat.icon;
             return (
-              <div class="bg-white/90 backdrop-blur-xs rounded-2xl p-3 border border-slate-200/80 shadow-xs text-left flex flex-col justify-between hover:border-hospital-teal/40 transition-colors">
+              <div class="bg-white/95 backdrop-blur-xs rounded-2xl p-3 sm:p-3.5 border border-slate-200/80 shadow-xs text-left flex flex-col justify-between hover:border-hospital-teal/50 hover:shadow-md hover:-translate-y-0.5 transition-all">
                 <div class="w-8 h-8 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center mb-2 flex-shrink-0">
                   <Icon class="w-4 h-4" aria-hidden="true" />
                 </div>

@@ -1,6 +1,8 @@
 ---
 import Logo from './Logo.astro';
-import { Calendar, Phone, Menu, X } from '@lucide/astro';
+import { Calendar, Phone, Menu, X, Clock } from '@lucide/astro';
+
+const currentPath = Astro.url.pathname;
 
 const navLinks = [
   { name: 'Home', href: '/' },
@@ -14,6 +16,9 @@ const navLinks = [
 ---
 
 <header id="main-header" class="sticky top-0 z-50 glass-nav transition-all duration-300">
+  <!-- Top Reading Scroll Progress Bar -->
+  <div id="scroll-progress-bar" aria-hidden="true"></div>
+
   <div class="max-w-7xl 2xl:max-w-[1536px] mx-auto px-3.5 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-20">
       
@@ -26,23 +31,30 @@ const navLinks = [
         <Logo size="md" />
       </a>
 
-      <!-- Desktop Navigation Links -->
-      <nav class="hidden lg:flex items-center gap-4 xl:gap-7" aria-label="Main Navigation">
-        {navLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-sm font-semibold text-hospital-navy hover:text-hospital-teal transition-colors tracking-wide py-2 relative after:content-[''] after:absolute after:bottom-1 after:left-0 after:w-0 after:h-0.5 after:bg-hospital-teal after:transition-all hover:after:w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal rounded"
-          >
-            {link.name}
-          </a>
-        ))}
+      <!-- Desktop Navigation Links with Active Highlighting -->
+      <nav class="hidden lg:flex items-center gap-1.5 xl:gap-2.5 bg-slate-100/60 p-1.5 rounded-full border border-slate-200/60" aria-label="Main Navigation">
+        {navLinks.map((link) => {
+          const isActive = currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href));
+          return (
+            <a
+              href={link.href}
+              class={`text-xs xl:text-sm tracking-wide transition-all px-3 py-1.5 rounded-full min-h-[36px] flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal ${
+                isActive
+                  ? 'text-hospital-teal font-extrabold bg-white shadow-xs'
+                  : 'text-hospital-navy font-semibold hover:text-hospital-teal hover:bg-white/80'
+              }`}
+            >
+              {link.name}
+            </a>
+          );
+        })}
       </nav>
 
       <!-- Desktop CTAs -->
       <div class="hidden sm:flex items-center gap-3">
         <a
           href="tel:8490068558"
-          class="hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-hospital-navy bg-hospital-mint hover:bg-hospital-mint-light transition-all border border-hospital-teal/25 min-h-[44px] hover:-translate-y-0.5"
+          class="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider text-hospital-navy bg-white hover:bg-hospital-mint transition-all border border-slate-200/90 shadow-2xs min-h-[42px] hover:-translate-y-0.5"
           title="Direct Call to Welfare Hospital"
           aria-label="Call Welfare Hospital at 8490068558"
         >
@@ -52,7 +64,7 @@ const navLinks = [
 
         <a
           href="/appointments"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.98] transition-all shadow-md shadow-hospital-teal/20 hover:shadow-lg hover:shadow-hospital-teal/30 min-h-[44px] hover:-translate-y-0.5"
+          class="btn-luxury inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.98] transition-all shadow-md shadow-hospital-teal/20 hover:shadow-lg hover:shadow-hospital-teal/30 min-h-[42px] hover:-translate-y-0.5"
         >
           <Calendar class="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
           <span>Book Appointment</span>
@@ -191,13 +203,22 @@ const navLinks = [
     }
   });
 
-  // Header scroll shadow elevation
+  // Header scroll shadow elevation & Reading Progress Bar
   const header = document.getElementById('main-header');
+  const progressBar = document.getElementById('scroll-progress-bar');
+
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 20) {
+    const scrollY = window.scrollY;
+    if (scrollY > 20) {
       header?.classList.add('shadow-md');
     } else {
       header?.classList.remove('shadow-md');
+    }
+
+    if (progressBar) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? Math.min(100, Math.max(0, (scrollY / docHeight) * 100)) : 0;
+      progressBar.style.width = `${progress}%`;
     }
   }, { passive: true });
 </script>

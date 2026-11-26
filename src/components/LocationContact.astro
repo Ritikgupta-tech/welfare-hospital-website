@@ -83,7 +83,7 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
           <div class="pt-2 flex flex-col sm:flex-row gap-3">
             <a
               href="tel:8490068558"
-              class="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark transition-all shadow-xs min-h-[44px]"
+              class="btn-luxury flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark transition-all shadow-md shadow-hospital-teal/20 min-h-[44px]"
             >
               <Phone class="w-4 h-4" aria-hidden="true" />
               <span>Call 8490068558</span>
@@ -93,7 +93,7 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
               href={mapsSearchUrl}
               target="_blank"
               rel="noopener noreferrer"
-              class="flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-hospital-navy bg-hospital-mint hover:bg-hospital-mint-light transition-all border border-hospital-teal/30 min-h-[44px]"
+              class="btn-luxury flex-1 inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-hospital-navy bg-hospital-mint hover:bg-hospital-mint-light transition-all border border-hospital-teal/30 min-h-[44px]"
             >
               <Navigation class="w-4 h-4 text-hospital-teal" aria-hidden="true" />
               <span>Get Directions</span>
@@ -125,7 +125,7 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
           </div>
 
           <!-- Simulated Map Graphic Container -->
-          <div class="relative w-full h-72 sm:h-80 rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden flex flex-col items-center justify-center p-6 text-center">
+          <div class="relative w-full h-64 sm:h-72 rounded-2xl bg-slate-100 border border-slate-200 overflow-hidden flex flex-col items-center justify-center p-6 text-center">
             
             <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#102A43_1px,transparent_1px)] [background-size:16px_16px]" aria-hidden="true"></div>
             
@@ -133,8 +133,8 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
             <div class="absolute inset-y-6 left-1/3 w-4 bg-slate-200/80 rounded border-x border-slate-300 pointer-events-none" aria-hidden="true"></div>
 
             <div class="relative z-10 max-w-sm space-y-3">
-              <div class="w-14 h-14 rounded-2xl bg-hospital-navy text-white flex items-center justify-center mx-auto shadow-lg ring-4 ring-white animate-bounce duration-1000">
-                <MapPin class="w-7 h-7 text-hospital-teal-light" aria-hidden="true" />
+              <div class="w-13 h-13 rounded-2xl bg-hospital-navy text-white flex items-center justify-center mx-auto shadow-lg ring-4 ring-white animate-bounce duration-1000">
+                <MapPin class="w-6 h-6 text-hospital-teal-light" aria-hidden="true" />
               </div>
 
               <div>
@@ -147,13 +147,29 @@ const mapsSearchUrl = "https://www.google.com/maps/search/?api=1&query=Welfare+H
                   href={mapsSearchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark shadow-md transition-all min-h-[44px]"
+                  class="btn-luxury inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark shadow-md transition-all min-h-[44px]"
                 >
                   <Navigation class="w-4 h-4" aria-hidden="true" />
                   <span>Search Route on Google Maps</span>
                   <ExternalLink class="w-3.5 h-3.5" aria-hidden="true" />
                 </a>
               </div>
+            </div>
+          </div>
+
+          <!-- Agra Regional Connectivity Indicators -->
+          <div class="mt-4 pt-3 border-t border-slate-100 grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-[11px] text-slate-600">
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <strong class="text-hospital-navy block">Ram Bagh Chauraha</strong>
+              <span>2 min direct road transit</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <strong class="text-hospital-navy block">Trans-Yamuna Colony</strong>
+              <span>5 min via Hathras Road</span>
+            </div>
+            <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/70">
+              <strong class="text-hospital-navy block">Foundry Nagar Corridor</strong>
+              <span>Direct 100 Feet Road access</span>
             </div>
           </div>
         </div>

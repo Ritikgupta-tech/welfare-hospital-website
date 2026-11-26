@@ -54,13 +54,13 @@ const trustPillars = [
       {trustPillars.map((pillar, index) => {
         const IconComponent = pillar.icon;
         return (
-          <div class={`bg-hospital-neutral rounded-2xl p-6 sm:p-7 border border-slate-200/80 shadow-card-elevated hover:-translate-y-1.5 hover:shadow-xl transition-all duration-300 flex flex-col justify-between group reveal-on-scroll reveal-stagger-${index + 1}`}>
+          <div class={`bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-card-elevated hover:-translate-y-2 hover:shadow-2xl hover:border-hospital-teal/40 transition-all duration-300 flex flex-col justify-between group reveal-on-scroll reveal-stagger-${index + 1}`}>
             <div>
               <div class="flex items-center justify-between mb-4">
-                <div class="w-12 h-12 rounded-xl bg-white text-hospital-teal flex items-center justify-center shadow-xs group-hover:bg-hospital-teal group-hover:text-white transition-colors flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-hospital-mint text-hospital-teal flex items-center justify-center shadow-xs group-hover:bg-hospital-teal group-hover:text-white transition-colors flex-shrink-0">
                   <IconComponent class="w-6 h-6" aria-hidden="true" />
                 </div>
-                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white text-hospital-slate border border-slate-200">
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-slate-100 text-hospital-navy border border-slate-200">
                   {pillar.badge}
                 </span>
               </div>
@@ -78,9 +78,9 @@ const trustPillars = [
               </p>
             </div>
 
-            <div class="mt-5 pt-3.5 border-t border-slate-200/70 flex items-center gap-1.5 text-xs text-hospital-slate">
+            <div class="mt-5 pt-3.5 border-t border-slate-100 flex items-center gap-1.5 text-xs text-hospital-slate">
               <CheckCircle2 class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" aria-hidden="true" />
-              <span>Dedicated Clinical Care</span>
+              <span>Verified Clinical Practice</span>
             </div>
           </div>
         );
