@@ -49,7 +49,9 @@ function loadData(): DatabaseData {
   try {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      cachedData = JSON.parse(raw);
+      if (raw && raw.trim().length > 0) {
+        cachedData = JSON.parse(raw);
+      }
       if (cachedData) {
         cachedData.adminUsers = cachedData.adminUsers || [];
         // Ensure super admin has valid hash (support env var override, or default seed if uninitialized)
@@ -87,7 +89,15 @@ function saveData(data: DatabaseData): void {
   cachedData = data;
   try {
     ensureDataDirectory();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    const tempFile = `${DATA_FILE}.${process.pid}.${Date.now()}.tmp`;
+    fs.writeFileSync(tempFile, JSON.stringify(data, null, 2), 'utf-8');
+    try {
+      fs.renameSync(tempFile, DATA_FILE);
+    } catch {
+      // On Windows if destination is locked, fall back to writeFileSync
+      fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+      try { fs.unlinkSync(tempFile); } catch {}
+    }
   } catch (err) {
     // In serverless / read-only environment, keep in-memory
   }
@@ -282,7 +292,8 @@ export async function createAppointment(data: {
   preferredDate: string;
   preferredTimeSlot: string;
   symptomsOrNotes?: string | null;
-}): Promise<Appointment> {
+  idempotencyKey?: string | null;
+}): Promise<Appointment & { isIdempotentReplay?: boolean }> {
   const db = loadData();
   const now = new Date().toISOString();
 
@@ -311,23 +322,39 @@ export async function createAppointment(data: {
   const service = await findServiceById(data.serviceId) || db.services[0];
   const doctor = db.doctors[0]; // Dr. Opee Rajput
 
-  // Deduplicate rapid repeat submissions for the same patient, service, and date within 5 minutes
-  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-  const existingPending = db.appointments.find(
-    (a) =>
-      a.status === 'PENDING' &&
-      a.patientId === patient.id &&
-      a.serviceId === service.id &&
-      a.preferredDate === data.preferredDate &&
-      a.createdAt >= fiveMinutesAgo
-  );
-  if (existingPending) {
-    return {
-      ...existingPending,
-      patient,
-      service,
-      doctor,
-    };
+  // 1. Dedicated idempotency key matching (RFC 7240 / Stripe-style idempotent retry)
+  if (data.idempotencyKey) {
+    const existingByIdempotency = db.appointments.find((a) => a.idempotencyKey === data.idempotencyKey);
+    if (existingByIdempotency) {
+      return {
+        ...existingByIdempotency,
+        isIdempotentReplay: true,
+        patient,
+        service,
+        doctor,
+      };
+    }
+  } else {
+    // 2. Rapid double-click fallback (same patient, service, date, and slot within 60 seconds)
+    const oneMinuteAgo = new Date(Date.now() - 60 * 1000).toISOString();
+    const existingRapid = db.appointments.find(
+      (a) =>
+        a.status === 'PENDING' &&
+        a.patientId === patient.id &&
+        a.serviceId === service.id &&
+        a.preferredDate === data.preferredDate &&
+        a.preferredTimeSlot === data.preferredTimeSlot &&
+        a.createdAt >= oneMinuteAgo
+    );
+    if (existingRapid) {
+      return {
+        ...existingRapid,
+        isIdempotentReplay: true,
+        patient,
+        service,
+        doctor,
+      };
+    }
   }
 
   // Generate unique reference
@@ -339,6 +366,7 @@ export async function createAppointment(data: {
   const appointment: Appointment = {
     id: `apt_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
     reference: ref,
+    idempotencyKey: data.idempotencyKey || null,
     patientId: patient.id,
     doctorId: doctor?.id || null,
     serviceId: service.id,

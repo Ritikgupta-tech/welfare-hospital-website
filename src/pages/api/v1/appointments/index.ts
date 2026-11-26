@@ -39,6 +39,7 @@ export const POST: APIRoute = async ({ request }) => {
     }
 
     const data = validation.data;
+    const idempotencyKey = data.idempotencyKey || request.headers.get('x-idempotency-key') || null;
 
     // Verify service exists
     const service = await findServiceById(data.serviceId);
@@ -55,10 +56,11 @@ export const POST: APIRoute = async ({ request }) => {
       preferredDate: data.preferredDate,
       preferredTimeSlot: data.preferredTimeSlot,
       symptomsOrNotes: data.symptomsOrNotes || null,
+      idempotencyKey: idempotencyKey || undefined,
     });
 
-    // Fire email notifications & record dispatch logs
-    if (appointment.patient) {
+    // Fire email notifications & record dispatch logs only for new requests (skip on idempotent replays)
+    if (appointment.patient && !(appointment as any).isIdempotentReplay) {
       const patientMsg = generateAppointmentCreatedEmail(appointment, appointment.patient, service);
       sendEmailNotification(patientMsg).catch((err) => {
         console.error('[Notification] Error dispatching patient email:', err);

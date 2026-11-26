@@ -65,4 +65,50 @@ describe('Concurrency Safety & Duplicate Submission Prevention', () => {
     expect(secondApt.reference).toBe(firstApt.reference);
     expect(secondApt.id).toBe(firstApt.id);
   });
+
+  it('honors unique idempotencyKey for exact retries while allowing separate bookings', async () => {
+    const uniquePhone = `94${Math.floor(10000000 + Math.random() * 90000000)}`;
+    const today = new Date().toISOString().split('T')[0];
+    const key1 = `idem_key_${Date.now()}_1`;
+
+    // 1. Initial submission with key1
+    const apt1 = await createAppointment({
+      fullName: 'Sunita Rao',
+      mobile: uniquePhone,
+      serviceId: 'primary-healthcare',
+      preferredDate: today,
+      preferredTimeSlot: 'Morning (10:00 AM - 01:00 PM)',
+      idempotencyKey: key1,
+    });
+
+    expect(apt1.idempotencyKey).toBe(key1);
+
+    // 2. Exact retry with same key1
+    const replay = await createAppointment({
+      fullName: 'Sunita Rao',
+      mobile: uniquePhone,
+      serviceId: 'primary-healthcare',
+      preferredDate: today,
+      preferredTimeSlot: 'Morning (10:00 AM - 01:00 PM)',
+      idempotencyKey: key1,
+    });
+
+    expect(replay.reference).toBe(apt1.reference);
+    expect(replay.isIdempotentReplay).toBe(true);
+
+    // 3. Legitimate second booking by same patient with distinct key2 (e.g., evening follow-up)
+    const key2 = `idem_key_${Date.now()}_2`;
+    const apt2 = await createAppointment({
+      fullName: 'Sunita Rao',
+      mobile: uniquePhone,
+      serviceId: 'physician-consultations',
+      preferredDate: today,
+      preferredTimeSlot: 'Evening (05:00 PM - 08:00 PM)',
+      idempotencyKey: key2,
+    });
+
+    expect(apt2.reference).not.toBe(apt1.reference);
+    expect(apt2.idempotencyKey).toBe(key2);
+    expect(apt2.serviceId).toBe('srv_physician_002');
+  });
 });

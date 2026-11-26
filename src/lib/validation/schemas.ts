@@ -37,6 +37,10 @@ export const createAppointmentSchema = z.object({
     .max(500, 'Notes must be under 500 characters')
     .optional()
     .or(z.literal('')),
+  idempotencyKey: z
+    .string()
+    .max(100)
+    .optional(),
 });
 
 export const loginSchema = z.object({

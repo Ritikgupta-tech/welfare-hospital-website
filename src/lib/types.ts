@@ -60,6 +60,7 @@ export interface Service {
 export interface Appointment {
   id: string;
   reference: string;
+  idempotencyKey?: string | null;
   patientId: string;
   doctorId?: string | null;
   serviceId: string;

@@ -10,6 +10,7 @@ import {
 import { generateAppointmentStatusUpdateEmail, sendEmailNotification } from '../../../../../lib/notifications/email';
 import { jsonResponse } from '../../../../../lib/security/headers';
 import { updateAppointmentStatusSchema } from '../../../../../lib/validation/schemas';
+import { validateCsrfOrigin } from '../../../../../lib/security/csrf';
 
 export const prerender = false;
 
@@ -32,6 +33,11 @@ export const GET: APIRoute = async ({ params, request }) => {
 };
 
 export const PATCH: APIRoute = async ({ params, request }) => {
+  const csrf = validateCsrfOrigin(request);
+  if (!csrf.valid) {
+    return jsonResponse({ success: false, error: 'Forbidden: CSRF verification failed' }, 403);
+  }
+
   const token =
     extractBearerToken(request.headers.get('authorization')) ||
     extractCookieToken(request.headers.get('cookie'));

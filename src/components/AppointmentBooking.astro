@@ -519,6 +519,10 @@ import { Calendar, Phone, Clock, User, Mail, FileText, CheckCircle2, AlertCircle
     btnSpinner?.classList.remove('hidden');
     btnSpinner?.classList.add('flex');
 
+    const idempotencyKey = (typeof crypto !== 'undefined' && crypto.randomUUID)
+      ? crypto.randomUUID()
+      : `idem_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
+
     const payload = {
       fullName: patientNameInput ? patientNameInput.value.trim() : '',
       mobile: mobileInput ? mobileInput.value.trim() : '',
@@ -527,6 +531,7 @@ import { Calendar, Phone, Clock, User, Mail, FileText, CheckCircle2, AlertCircle
       preferredDate: dateInput ? dateInput.value : new Date().toISOString().split('T')[0],
       preferredTimeSlot: preferredSlotInput ? preferredSlotInput.value : 'Morning (10:00 AM - 01:00 PM)',
       symptomsOrNotes: (document.getElementById('patientNotes') as HTMLTextAreaElement | null)?.value || '',
+      idempotencyKey,
     };
 
     fetch('/api/v1/appointments', {

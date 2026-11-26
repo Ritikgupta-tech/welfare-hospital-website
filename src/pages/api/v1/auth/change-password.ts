@@ -4,10 +4,17 @@ import { findAdminByEmail, updateAdminPassword } from '../../../../lib/db/store'
 import { hashPassword, verifyPassword } from '../../../../lib/auth/password';
 import { jsonResponse } from '../../../../lib/security/headers';
 import { checkRateLimit, getClientIp } from '../../../../lib/security/rateLimit';
+import { validateCsrfOrigin } from '../../../../lib/security/csrf';
 
 export const prerender = false;
 
 export const POST: APIRoute = async ({ request }) => {
+  // CSRF validation
+  const csrf = validateCsrfOrigin(request);
+  if (!csrf.valid) {
+    return jsonResponse({ success: false, error: 'Forbidden: CSRF verification failed' }, 403);
+  }
+
   const clientIp = getClientIp(request);
   // Rate limit: 5 password change attempts per 15 minutes
   const rateLimit = checkRateLimit(`pwd_change_${clientIp}`, 5, 15 * 60 * 1000);
