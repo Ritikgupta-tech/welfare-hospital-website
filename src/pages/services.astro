@@ -1,0 +1,87 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import { Stethoscope, Activity, HeartPulse, ShieldCheck, ArrowRight, Phone } from '@lucide/astro';
+
+export const prerender = true;
+---
+
+<Layout
+  title="Medical Services — Welfare Hospital, Ram Bagh, Agra"
+  description="Comprehensive primary healthcare, general physician consultations, health checks, and continuing medical care in Ram Bagh, Agra under Dr. Opee Rajput."
+>
+  <!-- Page Header Banner -->
+  <section class="bg-hospital-navy text-white py-16 sm:py-20 relative overflow-hidden">
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-hospital-teal/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-teal/20 text-hospital-mint text-xs font-bold uppercase tracking-wider mb-4 border border-hospital-teal/30">
+          <Stethoscope class="w-3.5 h-3.5 text-hospital-teal-light" />
+          <span>Outpatient Clinical Scope</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+          Medical & Clinical Services
+        </h1>
+        <p class="text-lg text-slate-300 leading-relaxed">
+          Welfare Hospital provides dependable outpatient healthcare, clinical diagnoses, and preventive medical consultations for individuals and families in Agra.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Services Grid Component -->
+  <ServicesSection />
+
+  <!-- Detailed Diagnostic & Consultation Scope -->
+  <section class="py-16 sm:py-20 bg-white border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mb-12">
+        <h2 class="text-section-title font-extrabold text-hospital-navy">What to Expect During Your Visit</h2>
+        <p class="mt-2 text-base text-hospital-body">Our structured outpatient procedure ensures every patient receives focused, unhurried attention.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl bg-hospital-neutral border border-slate-200">
+          <span class="text-xs font-bold text-hospital-teal uppercase tracking-wider block mb-1">Step 1</span>
+          <h3 class="text-lg font-bold text-hospital-navy mb-2">Initial Clinical Assessment</h3>
+          <p class="text-xs text-hospital-body leading-relaxed">
+            Vital signs measurement (blood pressure, temperature, pulse) and thorough recording of current symptoms and medical history.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-hospital-neutral border border-slate-200">
+          <span class="text-xs font-bold text-hospital-teal uppercase tracking-wider block mb-1">Step 2</span>
+          <h3 class="text-lg font-bold text-hospital-navy mb-2">Direct Physician Consultation</h3>
+          <p class="text-xs text-hospital-body leading-relaxed">
+            Personal consultation with Dr. Opee Rajput with physical examination, diagnosis explanation, and tailored treatment recommendations.
+          </p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-hospital-neutral border border-slate-200">
+          <span class="text-xs font-bold text-hospital-teal uppercase tracking-wider block mb-1">Step 3</span>
+          <h3 class="text-lg font-bold text-hospital-navy mb-2">Prescription & Follow-up Plan</h3>
+          <p class="text-xs text-hospital-body leading-relaxed">
+            Clear medication instructions, lifestyle guidance, and scheduled follow-up visits to ensure steady recovery.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Bottom CTA -->
+  <section class="py-16 bg-hospital-neutral text-center">
+    <div class="max-w-3xl mx-auto px-4">
+      <h3 class="text-2xl font-bold text-hospital-navy mb-3">Schedule Your Consultation</h3>
+      <p class="text-sm text-hospital-body mb-6">Our front desk confirms slots promptly during OPD hours.</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <a href="/appointments" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-hospital-teal hover:bg-hospital-teal-dark text-white font-bold text-sm transition-all shadow-md">
+          Request Appointment Online
+        </a>
+        <a href="tel:8490068558" class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-hospital-navy font-bold text-sm border border-slate-300 transition-all flex items-center justify-center gap-2">
+          <Phone class="w-4 h-4 text-hospital-teal" />
+          <span>Call 8490068558</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -519,34 +519,64 @@ import { Calendar, Phone, Clock, User, Mail, FileText, CheckCircle2, AlertCircle
     btnSpinner?.classList.remove('hidden');
     btnSpinner?.classList.add('flex');
 
-    setTimeout(() => {
-      isSubmitting = false;
-      if (submitBtn) submitBtn.disabled = false;
-      btnText?.classList.remove('hidden');
-      btnSpinner?.classList.add('hidden');
-      btnSpinner?.classList.remove('flex');
+    const payload = {
+      fullName: patientNameInput ? patientNameInput.value.trim() : '',
+      mobile: mobileInput ? mobileInput.value.trim() : '',
+      email: emailInput && emailInput.value.trim() ? emailInput.value.trim() : undefined,
+      serviceId: requestedServiceInput ? requestedServiceInput.value : 'primary-healthcare',
+      preferredDate: dateInput ? dateInput.value : new Date().toISOString().split('T')[0],
+      preferredTimeSlot: preferredSlotInput ? preferredSlotInput.value : 'Morning (10:00 AM - 01:00 PM)',
+      symptomsOrNotes: (document.getElementById('patientNotes') as HTMLTextAreaElement | null)?.value || '',
+    };
 
-      const randomTicketNum = Math.floor(1000 + Math.random() * 9000);
-      if (summaryTicket) summaryTicket.innerText = `WFH-AGRA-${randomTicketNum}`;
-      if (summaryName && patientNameInput) summaryName.innerText = patientNameInput.value.trim();
-      if (summaryPhone && mobileInput) summaryPhone.innerText = `+91 ${mobileInput.value.trim()}`;
-      if (summaryDoctor && preferredDoctorInput) summaryDoctor.innerText = preferredDoctorInput.value;
-      if (summaryService && requestedServiceInput) summaryService.innerText = requestedServiceInput.value;
-      if (summarySlot && preferredSlotInput && dateInput) {
-        summarySlot.innerText = `${dateInput.value} • ${preferredSlotInput.value.split('*')[0]}`;
-      }
+    fetch('/api/v1/appointments', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.error || 'Failed to submit appointment request.');
+        }
+        return json.data;
+      })
+      .then((data) => {
+        if (summaryTicket) summaryTicket.innerText = data.reference;
+        if (summaryName && patientNameInput) summaryName.innerText = patientNameInput.value.trim();
+        if (summaryPhone && mobileInput) summaryPhone.innerText = `+91 ${mobileInput.value.trim()}`;
+        if (summaryDoctor && preferredDoctorInput) summaryDoctor.innerText = preferredDoctorInput.value;
+        if (summaryService && requestedServiceInput) summaryService.innerText = data.serviceName || requestedServiceInput.value;
+        if (summarySlot && dateInput && preferredSlotInput) {
+          summarySlot.innerText = `${data.preferredDate} • ${data.preferredTimeSlot.split('(')[0]}`;
+        }
 
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        closeModalBtn?.focus();
-      }
+        if (modal) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          closeModalBtn?.focus();
+        }
 
-      form.reset();
-      if (dateInput) {
-        dateInput.value = new Date().toISOString().split('T')[0];
-      }
-    }, 600);
+        form.reset();
+        if (dateInput) {
+          dateInput.value = new Date().toISOString().split('T')[0];
+        }
+      })
+      .catch((err) => {
+        if (errorBanner) {
+          errorBanner.classList.remove('hidden');
+          if (errorBannerText) errorBannerText.innerText = err.message || 'Error submitting appointment. Please try again or call 8490068558.';
+        }
+      })
+      .finally(() => {
+        isSubmitting = false;
+        if (submitBtn) submitBtn.disabled = false;
+        btnText?.classList.remove('hidden');
+        btnSpinner?.classList.add('hidden');
+        btnSpinner?.classList.remove('flex');
+      });
   });
 
   closeModalBtn?.addEventListener('click', () => {

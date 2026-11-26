@@ -1,0 +1,220 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import {
+  Calendar,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  UserCheck,
+  TrendingUp,
+  ArrowRight,
+  RefreshCw,
+  Phone,
+} from '@lucide/astro';
+
+export const prerender = false;
+---
+
+<AdminLayout title="Operational Dashboard" activeNav="dashboard">
+  
+  <!-- Metrics KPI Row -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+    
+    <!-- Total Appointments -->
+    <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Total Consultations</span>
+        <div class="w-10 h-10 rounded-xl bg-slate-100 text-hospital-navy flex items-center justify-center">
+          <Calendar class="w-5 h-5 text-hospital-teal" />
+        </div>
+      </div>
+      <div id="stat-total" class="text-3xl font-extrabold text-hospital-navy">--</div>
+      <p class="text-[11px] text-slate-400 mt-1">All recorded outpatient tickets</p>
+    </div>
+
+    <!-- Pending Action Requests -->
+    <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Pending Review</span>
+        <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+          <Clock class="w-5 h-5" />
+        </div>
+      </div>
+      <div id="stat-pending" class="text-3xl font-extrabold text-amber-700">--</div>
+      <p class="text-[11px] text-amber-600 mt-1">Requires confirmation call</p>
+    </div>
+
+    <!-- Confirmed Appointments -->
+    <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Confirmed</span>
+        <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <CheckCircle2 class="w-5 h-5" />
+        </div>
+      </div>
+      <div id="stat-confirmed" class="text-3xl font-extrabold text-emerald-700">--</div>
+      <p class="text-[11px] text-emerald-600 mt-1">Scheduled & slot confirmed</p>
+    </div>
+
+    <!-- Today's Schedule -->
+    <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs font-bold uppercase tracking-wider text-hospital-teal">Scheduled Today</span>
+        <div class="w-10 h-10 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center">
+          <UserCheck class="w-5 h-5" />
+        </div>
+      </div>
+      <div id="stat-today" class="text-3xl font-extrabold text-hospital-teal">--</div>
+      <p class="text-[11px] text-hospital-teal mt-1">Visiting doctor queue today</p>
+    </div>
+
+  </div>
+
+  <!-- Recent Appointment Queue -->
+  <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden mb-8">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between flex-wrap gap-4">
+      <div>
+        <h2 class="text-base font-extrabold text-hospital-navy">Recent Inbound Requests</h2>
+        <p class="text-xs text-slate-500 mt-0.5">Live incoming consultation requests from public website</p>
+      </div>
+      <a
+        href="/admin/appointments"
+        class="inline-flex items-center gap-1.5 text-xs font-bold text-hospital-teal hover:text-hospital-teal-dark"
+      >
+        <span>View Full Database</span>
+        <ArrowRight class="w-3.5 h-3.5" />
+      </a>
+    </div>
+
+    <!-- Live Appointments Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+          <tr>
+            <th class="px-6 py-3.5">Reference</th>
+            <th class="px-6 py-3.5">Patient Details</th>
+            <th class="px-6 py-3.5">Service</th>
+            <th class="px-6 py-3.5">Preferred Slot</th>
+            <th class="px-6 py-3.5">Current Status</th>
+            <th class="px-6 py-3.5 text-right">Quick Action</th>
+          </tr>
+        </thead>
+        <tbody id="dashboard-recent-tbody" class="divide-y divide-slate-100">
+          <tr>
+            <td colspan="6" class="px-6 py-8 text-center text-slate-400">Loading live operational records...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Quick Administrative Action Bar -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs">
+      <h3 class="text-sm font-bold text-hospital-navy mb-2">Hospital Reception Desk</h3>
+      <p class="text-xs text-slate-500 mb-4">Central contact number for Dr. Opee Rajput's patient coordination.</p>
+      <a href="tel:8490068558" class="text-xs font-bold text-hospital-teal inline-flex items-center gap-1.5">
+        <Phone class="w-3.5 h-3.5" />
+        <span>+91 8490068558</span>
+      </a>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs">
+      <h3 class="text-sm font-bold text-hospital-navy mb-2">OPD Operating Schedule</h3>
+      <p class="text-xs text-slate-500 mb-4">Morning: 10:00 AM &ndash; 1:00 PM | Evening: 5:00 PM &ndash; 8:00 PM</p>
+      <span class="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full">
+        Standard Schedule Active
+      </span>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-xs">
+      <h3 class="text-sm font-bold text-hospital-navy mb-2">System Audit Status</h3>
+      <p class="text-xs text-slate-500 mb-4">Every status change and login event is signed and permanently logged.</p>
+      <a href="/admin/settings" class="text-xs font-bold text-hospital-teal hover:underline">
+        Review Audit Logs &rarr;
+      </a>
+    </div>
+  </div>
+
+  <script>
+    async function loadMetrics() {
+      try {
+        const res = await fetch('/api/v1/admin/dashboard');
+        if (!res.ok) return;
+        const json = await res.json();
+        if (!json.success || !json.data) return;
+
+        const d = json.data;
+        const totalEl = document.getElementById('stat-total');
+        const pendingEl = document.getElementById('stat-pending');
+        const confirmedEl = document.getElementById('stat-confirmed');
+        const todayEl = document.getElementById('stat-today');
+
+        if (totalEl) totalEl.innerText = String(d.totalAppointments);
+        if (pendingEl) pendingEl.innerText = String(d.pendingAppointments);
+        if (confirmedEl) confirmedEl.innerText = String(d.confirmedAppointments);
+        if (todayEl) todayEl.innerText = String(d.todayAppointments);
+
+        const tbody = document.getElementById('dashboard-recent-tbody');
+        if (!tbody) return;
+
+        if (!d.recentAppointments || d.recentAppointments.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" class="px-6 py-8 text-center text-slate-400">
+                No appointment requests registered yet. New submissions from the public website will stream here in real time.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        const statusBadges: Record<string, string> = {
+          PENDING: 'bg-amber-100 text-amber-800 border-amber-200',
+          CONFIRMED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          RESCHEDULED: 'bg-blue-100 text-blue-800 border-blue-200',
+          CANCELLED: 'bg-rose-100 text-rose-800 border-rose-200',
+          COMPLETED: 'bg-teal-100 text-teal-800 border-teal-200',
+        };
+
+        tbody.innerHTML = d.recentAppointments
+          .map((apt: any) => {
+            const badgeClass = statusBadges[apt.status] || 'bg-slate-100 text-slate-700';
+            return `
+              <tr class="hover:bg-slate-50/80 transition-colors">
+                <td class="px-6 py-4 font-mono font-bold text-hospital-teal">${apt.reference}</td>
+                <td class="px-6 py-4">
+                  <div class="font-bold text-hospital-navy">${apt.patient?.fullName || 'Unknown'}</div>
+                  <div class="text-slate-500 font-mono text-[11px]">+91 ${apt.patient?.mobile || ''}</div>
+                </td>
+                <td class="px-6 py-4 font-medium text-slate-700">${apt.service?.name || 'General OPD'}</td>
+                <td class="px-6 py-4 text-slate-600 font-medium">
+                  <div>${apt.preferredDate}</div>
+                  <div class="text-[10px] text-slate-400">${apt.preferredTimeSlot.split('(')[0]}</div>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${badgeClass}">
+                    ${apt.status}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-right">
+                  <a
+                    href="/admin/appointments?search=${encodeURIComponent(apt.reference)}"
+                    class="px-3 py-1.5 rounded-lg bg-hospital-mint hover:bg-hospital-mint-light text-hospital-teal font-bold text-[11px] transition-colors"
+                  >
+                    Manage
+                  </a>
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      } catch (e) {
+        console.error('Failed to load dashboard:', e);
+      }
+    }
+
+    loadMetrics();
+  </script>
+</AdminLayout>

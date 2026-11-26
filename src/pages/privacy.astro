@@ -1,0 +1,81 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { Shield, Lock, FileText, CheckCircle2 } from '@lucide/astro';
+
+export const prerender = true;
+---
+
+<Layout
+  title="Privacy Policy — Welfare Hospital, Agra"
+  description="Healthcare Privacy Policy of Welfare Hospital, Ram Bagh, Agra. Details our compliance with Indian Digital Personal Data Protection principles and patient confidentiality."
+>
+  <section class="bg-hospital-navy text-white py-14 relative">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-white mb-3">
+        Patient Privacy Policy
+      </h1>
+      <p class="text-sm text-slate-300">
+        Effective Date: January 1, 2026 &bull; Compliant with Digital Personal Data Protection Act, 2023 (India)
+      </p>
+    </div>
+  </section>
+
+  <section class="py-16 bg-white text-hospital-body">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 space-y-10 text-sm leading-relaxed">
+      
+      <div>
+        <h2 class="text-xl font-bold text-hospital-navy mb-3">1. Introduction & Institutional Commitment</h2>
+        <p>
+          Welfare Hospital (“we,” “our,” or “the Hospital”), located at 100 Feet Road, Ram Bagh, Agra, Uttar Pradesh, respects the confidentiality of personal and clinical data provided by patients and website visitors. This Privacy Policy details how we collect, store, handle, and protect your information when using our website or booking an outpatient consultation with Dr. Opee Rajput.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold text-hospital-navy mb-3">2. Information We Collect</h2>
+        <p class="mb-2">We collect only necessary information required to facilitate patient outpatient scheduling and clinical communication:</p>
+        <ul class="list-disc pl-5 space-y-1.5 text-slate-700">
+          <li><strong>Contact Details:</strong> Patient full name, 10-digit Indian mobile number, and email address (if optionally supplied).</li>
+          <li><strong>Consultation Requests:</strong> Requested healthcare department, chosen consultation date, and preferred morning or evening OPD slot.</li>
+          <li><strong>Clinical Context:</strong> Brief, voluntary symptoms or medical notes provided to assist the doctor’s triage.</li>
+          <li><strong>System Audit Logs:</strong> IP address, timestamp, and reference identification numbers to protect against automated spam and unauthorized data tampering.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold text-hospital-navy mb-3">3. Purpose of Data Processing</h2>
+        <p class="mb-2">Your information is processed strictly for legitimate healthcare administration purposes:</p>
+        <ul class="list-disc pl-5 space-y-1.5 text-slate-700">
+          <li>Reviewing, scheduling, and confirming outpatient appointments with Dr. Opee Rajput.</li>
+          <li>Contacting you via telephone or email regarding slot confirmations, rescheduling, or clinic updates.</li>
+          <li>Providing unique booking reference tracking numbers for patient transparency.</li>
+          <li>Internal operational reporting and record-keeping required by applicable clinical healthcare guidelines.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold text-hospital-navy mb-3">4. Non-Disclosure & Security Safeguards</h2>
+        <p>
+          We do <strong>not</strong> sell, rent, commercialize, or share patient personal information with third-party advertising brokers or pharmaceutical marketers. Data is accessible solely to authorized hospital administration personnel. All digital communications utilize TLS/HTTPS encryption, database access is role-restricted, and administrative portals enforce salted password hashing and session authorization.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold text-hospital-navy mb-3">5. Patient Rights & Data Erasure</h2>
+        <p>
+          In accordance with Indian privacy laws, patients have the right to request access to their appointment records, correct inaccurate contact numbers, or request the erasure of digital contact details once clinical consultation requirements are completed.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-bold text-hospital-navy mb-3">6. Grievance Redressal Officer</h2>
+        <p>
+          For questions, privacy grievances, or data correction requests, please contact:<br>
+          <strong>Hospital Administration & Grievance Desk</strong><br>
+          Welfare Hospital, 100 Feet Road, Ram Bagh, Agra, Uttar Pradesh, India<br>
+          Telephone: <a href="tel:8490068558" class="text-hospital-teal font-bold">+91 8490068558</a>
+        </p>
+      </div>
+
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,74 @@
+---
+import Layout from '../layouts/Layout.astro';
+import DoctorsSection from '../components/DoctorsSection.astro';
+import { UserCheck, Award, Calendar, Phone } from '@lucide/astro';
+
+export const prerender = true;
+---
+
+<Layout
+  title="Doctors & Medical Leadership — Dr. Opee Rajput | Welfare Hospital Agra"
+  description="Meet Dr. Opee Rajput, supervising physician and owner of Welfare Hospital in Ram Bagh, Agra with 34 years of healthcare dedication."
+>
+  <!-- Page Header Banner -->
+  <section class="bg-hospital-navy text-white py-16 sm:py-20 relative overflow-hidden">
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-hospital-teal/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-teal/20 text-hospital-mint text-xs font-bold uppercase tracking-wider mb-4 border border-hospital-teal/30">
+          <UserCheck class="w-3.5 h-3.5 text-hospital-teal-light" />
+          <span>Clinical Leadership</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+          Doctors & Medical Team
+        </h1>
+        <p class="text-lg text-slate-300 leading-relaxed">
+          Led by Dr. Opee Rajput, bringing 34 years of community healthcare experience to patients across Ram Bagh and Agra.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Doctors Section -->
+  <DoctorsSection />
+
+  <!-- Consultation Timings & Guidelines -->
+  <section class="py-16 sm:py-20 bg-white border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl mx-auto text-center mb-10">
+        <h2 class="text-section-title font-extrabold text-hospital-navy">Doctor Consultation Hours</h2>
+        <p class="mt-2 text-sm text-hospital-body">General physician outpatient timings for Dr. Opee Rajput at Welfare Hospital.</p>
+      </div>
+
+      <div class="max-w-2xl mx-auto bg-hospital-neutral rounded-3xl p-8 border border-slate-200/90 shadow-card-elevated">
+        <div class="space-y-4 text-sm">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <span class="font-bold text-hospital-navy">Days:</span>
+            <span class="text-hospital-teal font-semibold">Monday to Saturday</span>
+          </div>
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <span class="font-bold text-hospital-navy">Morning OPD:</span>
+            <span class="text-hospital-navy font-semibold">10:00 AM &ndash; 01:00 PM</span>
+          </div>
+          <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+            <span class="font-bold text-hospital-navy">Evening OPD:</span>
+            <span class="text-hospital-navy font-semibold">05:00 PM &ndash; 08:00 PM</span>
+          </div>
+          <div class="flex items-center justify-between pt-1">
+            <span class="font-bold text-hospital-navy">Sunday:</span>
+            <span class="text-slate-500 font-medium">By Emergency / Prior Appointment Only</span>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-slate-200 flex flex-col sm:flex-row gap-3">
+          <a href="/appointments" class="flex-1 py-3 px-4 rounded-xl text-center bg-hospital-teal hover:bg-hospital-teal-dark text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm">
+            Book Appointment Slot
+          </a>
+          <a href="tel:8490068558" class="flex-1 py-3 px-4 rounded-xl text-center bg-white hover:bg-slate-50 text-hospital-navy font-bold text-xs uppercase tracking-wider border border-slate-300 transition-colors">
+            Call: 8490068558
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>

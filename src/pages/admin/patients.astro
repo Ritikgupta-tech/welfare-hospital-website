@@ -1,0 +1,95 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { Users, Search, Phone, Mail, MapPin } from '@lucide/astro';
+
+export const prerender = false;
+---
+
+<AdminLayout title="Patient Directory" activeNav="patients">
+  <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div>
+      <h2 class="text-lg font-extrabold text-hospital-navy">Registered Outpatient Records</h2>
+      <p class="text-xs text-slate-500">Contact information and history for patients consulting at Welfare Hospital.</p>
+    </div>
+    <div class="w-full sm:w-64">
+      <input
+        type="text"
+        id="search-patient"
+        placeholder="Search patient name or mobile..."
+        class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-hospital-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-hospital-teal min-h-[40px]"
+      />
+    </div>
+  </div>
+
+  <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+          <tr>
+            <th class="px-6 py-4">Patient Full Name</th>
+            <th class="px-6 py-4">Mobile Number</th>
+            <th class="px-6 py-4">Email</th>
+            <th class="px-6 py-4">City / Region</th>
+            <th class="px-6 py-4">Registered Date</th>
+          </tr>
+        </thead>
+        <tbody id="patients-tbody" class="divide-y divide-slate-100">
+          <tr>
+            <td colspan="5" class="px-6 py-8 text-center text-slate-400">Loading patients...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    let patientsCache: any[] = [];
+    const tbody = document.getElementById('patients-tbody');
+    const searchInput = document.getElementById('search-patient') as HTMLInputElement | null;
+
+    async function loadPatients() {
+      if (!tbody) return;
+      try {
+        const res = await fetch('/api/v1/admin/patients');
+        if (!res.ok) throw new Error('Failed to load');
+        const json = await res.json();
+        patientsCache = json.data || [];
+        renderPatients(patientsCache);
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-rose-600">Failed to load patient records.</td></tr>';
+      }
+    }
+
+    function renderPatients(list: any[]) {
+      if (!tbody) return;
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">No patient records found yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = list
+        .map(
+          (p) => `
+          <tr class="hover:bg-slate-50/80 transition-colors">
+            <td class="px-6 py-4 font-bold text-hospital-navy">${p.fullName}</td>
+            <td class="px-6 py-4 font-mono font-medium text-hospital-teal">+91 ${p.mobile}</td>
+            <td class="px-6 py-4 text-slate-600">${p.email || '&ndash;'}</td>
+            <td class="px-6 py-4 text-slate-600">${p.city || 'Agra'}</td>
+            <td class="px-6 py-4 text-slate-500">${p.createdAt.split('T')[0]}</td>
+          </tr>
+        `
+        )
+        .join('');
+    }
+
+    searchInput?.addEventListener('input', () => {
+      const q = searchInput.value.toLowerCase().trim();
+      const filtered = patientsCache.filter(
+        (p) => p.fullName.toLowerCase().includes(q) || p.mobile.includes(q)
+      );
+      renderPatients(filtered);
+    });
+
+    loadPatients();
+  </script>
+</AdminLayout>

@@ -1,0 +1,376 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import {
+  Calendar,
+  Search,
+  Filter,
+  Download,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  Phone,
+  FileText,
+  AlertCircle,
+  X,
+} from '@lucide/astro';
+
+export const prerender = false;
+---
+
+<AdminLayout title="Appointment Management" activeNav="appointments">
+  
+  <!-- Action Header & Filters -->
+  <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs mb-6 space-y-4">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-extrabold text-hospital-navy">Patient Appointments</h2>
+        <p class="text-xs text-slate-500">Search, filter, update consultation statuses, and add administrative notes.</p>
+      </div>
+
+      <button
+        id="export-csv-btn"
+        type="button"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-hospital-navy font-bold text-xs transition-colors"
+      >
+        <Download class="w-4 h-4 text-hospital-slate" />
+        <span>Export CSV</span>
+      </button>
+    </div>
+
+    <!-- Filter Form -->
+    <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-2">
+      <!-- Search Input -->
+      <div class="sm:col-span-6 relative">
+        <Search class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
+        <input
+          type="text"
+          id="filter-search"
+          placeholder="Search by reference, patient name, phone..."
+          class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs text-hospital-navy placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-hospital-teal min-h-[40px]"
+        />
+      </div>
+
+      <!-- Status Filter -->
+      <div class="sm:col-span-3">
+        <select
+          id="filter-status"
+          class="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-300 text-xs font-semibold text-hospital-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-hospital-teal min-h-[40px]"
+        >
+          <option value="ALL">All Statuses</option>
+          <option value="PENDING">Pending Review</option>
+          <option value="CONFIRMED">Confirmed</option>
+          <option value="RESCHEDULED">Rescheduled</option>
+          <option value="COMPLETED">Completed</option>
+          <option value="CANCELLED">Cancelled / Rejected</option>
+        </select>
+      </div>
+
+      <!-- Date Filter -->
+      <div class="sm:col-span-3">
+        <input
+          type="date"
+          id="filter-date"
+          class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-xs text-hospital-navy focus:bg-white focus:outline-none focus:ring-2 focus:ring-hospital-teal min-h-[40px]"
+        />
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointments Data Table -->
+  <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+          <tr>
+            <th class="px-6 py-4">Reference</th>
+            <th class="px-6 py-4">Patient Name & Phone</th>
+            <th class="px-6 py-4">Service</th>
+            <th class="px-6 py-4">Scheduled Date</th>
+            <th class="px-6 py-4">Time Slot</th>
+            <th class="px-6 py-4">Status</th>
+            <th class="px-6 py-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="appointments-tbody" class="divide-y divide-slate-100">
+          <tr>
+            <td colspan="7" class="px-6 py-12 text-center text-slate-400">Loading appointments...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table Pagination Footer -->
+    <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+      <div id="pagination-info">Showing records...</div>
+      <div class="flex items-center gap-2">
+        <button id="prev-page-btn" disabled class="px-3 py-1.5 rounded-lg border border-slate-200 disabled:opacity-40">Previous</button>
+        <button id="next-page-btn" disabled class="px-3 py-1.5 rounded-lg border border-slate-200 disabled:opacity-40">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Update Modal -->
+  <div id="status-modal" class="hidden fixed inset-0 z-50 bg-hospital-navy/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="text-base font-bold text-hospital-navy">Update Appointment Status</h3>
+          <p id="modal-ref-subtitle" class="text-xs text-hospital-teal font-mono font-bold mt-0.5">WFH-AGRA-XXXX</p>
+        </div>
+        <button id="close-status-modal-btn" type="button" class="p-2 rounded-xl text-slate-400 hover:bg-slate-100">
+          <X class="w-5 h-5" />
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">New Clinical Status</label>
+          <select id="modal-status-select" class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs font-semibold text-hospital-navy">
+            <option value="CONFIRMED">CONFIRMED (Patient confirmed for visit)</option>
+            <option value="RESCHEDULED">RESCHEDULED (Slot moved to alternate time)</option>
+            <option value="COMPLETED">COMPLETED (Consultation completed)</option>
+            <option value="CANCELLED">CANCELLED (Cancelled by patient or hospital)</option>
+            <option value="REJECTED">REJECTED (Doctor unavailable / outside scope)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">Administrative & Patient Notes</label>
+          <textarea
+            id="modal-notes-input"
+            rows="3"
+            placeholder="e.g. Confirmed with patient over phone for 11:30 AM slot."
+            class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-xs text-hospital-navy placeholder:text-slate-400"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex items-center justify-end gap-3">
+        <button
+          id="modal-cancel-btn"
+          type="button"
+          class="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100"
+        >
+          Cancel
+        </button>
+        <button
+          id="modal-save-btn"
+          type="button"
+          class="px-5 py-2.5 rounded-xl bg-hospital-teal hover:bg-hospital-teal-dark text-white font-bold text-xs transition-colors"
+        >
+          Save & Notify Patient
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let appointmentsCache: any[] = [];
+    let currentPage = 1;
+    let selectedAppointmentId: string | null = null;
+
+    const tbody = document.getElementById('appointments-tbody');
+    const searchInput = document.getElementById('filter-search') as HTMLInputElement | null;
+    const statusSelect = document.getElementById('filter-status') as HTMLSelectElement | null;
+    const dateInput = document.getElementById('filter-date') as HTMLInputElement | null;
+    const paginationInfo = document.getElementById('pagination-info');
+    const prevBtn = document.getElementById('prev-page-btn') as HTMLButtonElement | null;
+    const nextBtn = document.getElementById('next-page-btn') as HTMLButtonElement | null;
+
+    const modal = document.getElementById('status-modal');
+    const modalRef = document.getElementById('modal-ref-subtitle');
+    const modalSelect = document.getElementById('modal-status-select') as HTMLSelectElement | null;
+    const modalNotes = document.getElementById('modal-notes-input') as HTMLTextAreaElement | null;
+    const modalSaveBtn = document.getElementById('modal-save-btn');
+    const modalCloseBtn = document.getElementById('close-status-modal-btn');
+    const modalCancelBtn = document.getElementById('modal-cancel-btn');
+
+    async function fetchAppointments() {
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-slate-400">Querying database...</td></tr>';
+
+      const search = searchInput?.value.trim() || '';
+      const status = statusSelect?.value || 'ALL';
+      const date = dateInput?.value || '';
+
+      const query = new URLSearchParams({
+        page: String(currentPage),
+        limit: '25',
+        search,
+        status,
+        date,
+      });
+
+      try {
+        const res = await fetch(`/api/v1/admin/appointments?${query.toString()}`);
+        if (!res.ok) throw new Error('Unauthorized or failed request');
+        const json = await res.json();
+        appointmentsCache = json.data || [];
+
+        renderTable(appointmentsCache, json.meta);
+      } catch (err: any) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-8 text-center text-rose-600">Failed to load appointments: ${err.message}</td></tr>`;
+      }
+    }
+
+    function renderTable(list: any[], meta?: any) {
+      if (!tbody) return;
+      if (list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="px-6 py-8 text-center text-slate-400">No appointments matched your search filter.</td></tr>';
+        if (paginationInfo) paginationInfo.innerText = '0 records found';
+        return;
+      }
+
+      const statusBadges: Record<string, string> = {
+        PENDING: 'bg-amber-100 text-amber-800 border-amber-200',
+        CONFIRMED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+        RESCHEDULED: 'bg-blue-100 text-blue-800 border-blue-200',
+        CANCELLED: 'bg-rose-100 text-rose-800 border-rose-200',
+        REJECTED: 'bg-slate-100 text-slate-800 border-slate-200',
+        COMPLETED: 'bg-teal-100 text-teal-800 border-teal-200',
+      };
+
+      tbody.innerHTML = list
+        .map((a) => {
+          const badgeClass = statusBadges[a.status] || 'bg-slate-100 text-slate-700';
+          return `
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="px-6 py-4 font-mono font-bold text-hospital-teal">${a.reference}</td>
+              <td class="px-6 py-4">
+                <div class="font-bold text-hospital-navy">${a.patient?.fullName || 'Patient'}</div>
+                <div class="text-slate-500 font-mono text-[11px]">+91 ${a.patient?.mobile || ''}</div>
+              </td>
+              <td class="px-6 py-4 font-medium text-slate-700">${a.service?.name || 'General OPD'}</td>
+              <td class="px-6 py-4 font-medium text-hospital-navy">${a.preferredDate}</td>
+              <td class="px-6 py-4 text-slate-600">${a.preferredTimeSlot.split('(')[0]}</td>
+              <td class="px-6 py-4">
+                <span class="px-2.5 py-1 rounded-full text-[10px] font-bold border ${badgeClass}">
+                  ${a.status}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button
+                  type="button"
+                  data-apt-id="${a.id}"
+                  data-apt-ref="${a.reference}"
+                  data-apt-status="${a.status}"
+                  class="edit-status-btn px-3 py-1.5 rounded-lg bg-hospital-teal hover:bg-hospital-teal-dark text-white font-bold text-[11px] transition-colors"
+                >
+                  Update
+                </button>
+              </td>
+            </tr>
+          `;
+        })
+        .join('');
+
+      if (meta && paginationInfo) {
+        paginationInfo.innerText = `Showing ${list.length} of ${meta.total} records (Page ${meta.page} of ${meta.totalPages})`;
+        if (prevBtn) prevBtn.disabled = meta.page <= 1;
+        if (nextBtn) nextBtn.disabled = meta.page >= meta.totalPages;
+      }
+
+      // Bind edit buttons
+      document.querySelectorAll('.edit-status-btn').forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          const target = e.currentTarget as HTMLElement;
+          selectedAppointmentId = target.getAttribute('data-apt-id');
+          const ref = target.getAttribute('data-apt-ref') || '';
+          const status = target.getAttribute('data-apt-status') || 'PENDING';
+
+          if (modalRef) modalRef.innerText = ref;
+          if (modalSelect) modalSelect.value = status;
+          if (modalNotes) modalNotes.value = '';
+          modal?.classList.remove('hidden');
+        });
+      });
+    }
+
+    // Modal controls
+    modalCloseBtn?.addEventListener('click', () => modal?.classList.add('hidden'));
+    modalCancelBtn?.addEventListener('click', () => modal?.classList.add('hidden'));
+
+    modalSaveBtn?.addEventListener('click', async () => {
+      if (!selectedAppointmentId || !modalSelect) return;
+      const newStatus = modalSelect.value;
+      const notes = modalNotes?.value.trim() || undefined;
+
+      try {
+        const res = await fetch(`/api/v1/admin/appointments/${selectedAppointmentId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus, notes }),
+        });
+
+        if (res.ok) {
+          modal?.classList.add('hidden');
+          fetchAppointments();
+        } else {
+          alert('Failed to update status.');
+        }
+      } catch (err) {
+        alert('Error saving status update.');
+      }
+    });
+
+    // Filter listeners
+    searchInput?.addEventListener('input', () => {
+      currentPage = 1;
+      fetchAppointments();
+    });
+    statusSelect?.addEventListener('change', () => {
+      currentPage = 1;
+      fetchAppointments();
+    });
+    dateInput?.addEventListener('change', () => {
+      currentPage = 1;
+      fetchAppointments();
+    });
+
+    // Pagination
+    prevBtn?.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        fetchAppointments();
+      }
+    });
+    nextBtn?.addEventListener('click', () => {
+      currentPage++;
+      fetchAppointments();
+    });
+
+    // Export CSV
+    document.getElementById('export-csv-btn')?.addEventListener('click', () => {
+      if (appointmentsCache.length === 0) {
+        alert('No records available to export.');
+        return;
+      }
+
+      const headers = ['Reference,Patient Name,Mobile,Service,Preferred Date,Time Slot,Status,Created At'];
+      const rows = appointmentsCache.map((a) =>
+        [
+          a.reference,
+          `"${a.patient?.fullName || ''}"`,
+          a.patient?.mobile || '',
+          `"${a.service?.name || ''}"`,
+          a.preferredDate,
+          `"${a.preferredTimeSlot}"`,
+          a.status,
+          a.createdAt,
+        ].join(',')
+      );
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers, ...rows].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `welfare_hospital_appointments_${Date.now()}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Initial load
+    fetchAppointments();
+  </script>
+</AdminLayout>

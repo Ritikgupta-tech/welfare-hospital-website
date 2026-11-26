@@ -1,0 +1,172 @@
+---
+import '../styles/global.css';
+import Logo from '../components/Logo.astro';
+import {
+  LayoutDashboard,
+  CalendarCheck,
+  Users,
+  Stethoscope,
+  Settings,
+  LogOut,
+  ShieldCheck,
+  Bell,
+  Menu,
+  ExternalLink,
+} from '@lucide/astro';
+
+interface Props {
+  title: string;
+  activeNav: 'dashboard' | 'appointments' | 'patients' | 'services' | 'settings';
+}
+
+const { title, activeNav } = Astro.props;
+
+const navItems = [
+  { id: 'dashboard', name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
+  { id: 'appointments', name: 'Appointments', href: '/admin/appointments', icon: CalendarCheck },
+  { id: 'patients', name: 'Patients', href: '/admin/patients', icon: Users },
+  { id: 'settings', name: 'Settings & Audit', href: '/admin/settings', icon: Settings },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — Welfare Hospital Admin</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-slate-50 text-hospital-navy font-sans antialiased min-h-screen flex">
+    
+    <!-- Left Navigation Sidebar (Desktop) -->
+    <aside class="hidden lg:flex flex-col w-64 bg-hospital-navy text-slate-300 border-r border-slate-800 flex-shrink-0 min-h-screen">
+      <!-- Brand Logo Header -->
+      <div class="p-6 border-b border-slate-800">
+        <a href="/" target="_blank" class="flex items-center gap-2 group">
+          <Logo variant="light" size="sm" />
+        </a>
+        <div class="mt-2 text-[10px] font-bold uppercase tracking-wider text-hospital-teal-light px-2 py-0.5 rounded bg-hospital-teal/20 inline-block">
+          Hospital Ops Portal
+        </div>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="flex-1 px-4 py-6 space-y-1.5" aria-label="Admin Navigation">
+        {navItems.map((item) => {
+          const IconComp = item.icon;
+          const isActive = activeNav === item.id;
+          return (
+            <a
+              href={item.href}
+              class={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-sm font-semibold transition-all min-h-[44px] ${
+                isActive
+                  ? 'bg-hospital-teal text-white shadow-md'
+                  : 'text-slate-400 hover:bg-slate-800/80 hover:text-white'
+              }`}
+            >
+              <IconComp class="w-4 h-4 flex-shrink-0" />
+              <span>{item.name}</span>
+            </a>
+          );
+        })}
+      </nav>
+
+      <!-- Bottom User Profile & Logout -->
+      <div class="p-4 border-t border-slate-800 space-y-3">
+        <div class="flex items-center gap-3 px-2">
+          <div class="w-8 h-8 rounded-full bg-hospital-teal text-white flex items-center justify-center font-bold text-xs">
+            WH
+          </div>
+          <div class="overflow-hidden">
+            <p class="text-xs font-bold text-white truncate">Administrator</p>
+            <p class="text-[10px] text-slate-400 truncate">admin@welfarehospital.com</p>
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center gap-2">
+          <a
+            href="/"
+            target="_blank"
+            class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 transition-colors"
+            title="View Live Public Website"
+          >
+            <span>Live Site</span>
+            <ExternalLink class="w-3 h-3" />
+          </a>
+
+          <button
+            id="admin-logout-btn"
+            type="button"
+            class="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-medium text-rose-300 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/40 transition-colors"
+          >
+            <LogOut class="w-3 h-3" />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Right Content Column -->
+    <div class="flex-1 flex flex-col min-w-0">
+      
+      <!-- Top Header Bar -->
+      <header class="bg-white border-b border-slate-200 px-4 sm:px-8 py-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+        <div class="flex items-center gap-3">
+          <h1 class="text-xl font-extrabold text-hospital-navy">{title}</h1>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <a
+            href="tel:8490068558"
+            class="hidden sm:inline-flex items-center gap-1.5 text-xs font-bold text-hospital-teal bg-hospital-mint px-3 py-1.5 rounded-full"
+          >
+            Reception: 8490068558
+          </a>
+          <button
+            id="mobile-admin-logout-btn"
+            type="button"
+            class="lg:hidden text-xs text-rose-600 font-bold px-3 py-1.5 rounded-lg border border-rose-200"
+          >
+            Logout
+          </button>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <main class="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto">
+        <slot />
+      </main>
+
+    </div>
+
+    <!-- Client Script to handle auth verification and logout -->
+    <script>
+      // Verify session token on page load
+      fetch('/api/v1/auth/me')
+        .then((res) => {
+          if (!res.ok) {
+            window.location.href = '/admin/login';
+          }
+        })
+        .catch(() => {
+          window.location.href = '/admin/login';
+        });
+
+      async function handleLogout() {
+        try {
+          await fetch('/api/v1/auth/logout', { method: 'POST' });
+        } finally {
+          window.location.href = '/admin/login';
+        }
+      }
+
+      document.getElementById('admin-logout-btn')?.addEventListener('click', handleLogout);
+      document.getElementById('mobile-admin-logout-btn')?.addEventListener('click', handleLogout);
+    </script>
+  </body>
+</html>

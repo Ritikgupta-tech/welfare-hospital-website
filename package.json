@@ -9,13 +9,26 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest run"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.14",
+    "@astrojs/vercel": "^11.0.22",
     "@lucide/astro": "^1.55.0",
+    "@prisma/client": "^7.10.1",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.8",
+    "bcryptjs": "^3.0.3",
+    "jsonwebtoken": "^9.0.3",
     "lucide-astro": "^0.556.0",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "prisma": "^8.0.0-rc.35",
+    "vitest": "^5.1.2"
   }
 }

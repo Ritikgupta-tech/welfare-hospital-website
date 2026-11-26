@@ -1,0 +1,160 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AppointmentBooking from '../components/AppointmentBooking.astro';
+import { Calendar, Search, CheckCircle2, Clock, Phone, AlertCircle, FileText } from '@lucide/astro';
+
+export const prerender = false;
+---
+
+<Layout
+  title="Book & Track Appointment — Welfare Hospital, Agra"
+  description="Request an outpatient consultation slot or track your existing appointment status with Dr. Opee Rajput at Welfare Hospital, Ram Bagh, Agra."
+>
+  <!-- Page Header Banner -->
+  <section class="bg-hospital-navy text-white py-16 sm:py-20 relative overflow-hidden">
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-hospital-teal/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-hospital-teal/20 text-hospital-mint text-xs font-bold uppercase tracking-wider mb-4 border border-hospital-teal/30">
+          <Calendar class="w-3.5 h-3.5 text-hospital-teal-light" />
+          <span>Patient Portal</span>
+        </div>
+        <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
+          Appointment Desk & Status Tracker
+        </h1>
+        <p class="text-lg text-slate-300 leading-relaxed">
+          Book a new outpatient consultation with Dr. Opee Rajput, or enter your reference code to check your live appointment status.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Status Tracker Section -->
+  <section class="py-12 bg-hospital-mint/30 border-b border-teal-100">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6">
+      <div class="bg-white rounded-3xl p-6 sm:p-8 border border-teal-100 shadow-md">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-hospital-mint text-hospital-teal flex items-center justify-center flex-shrink-0">
+            <Search class="w-5 h-5" />
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-hospital-navy">Track Existing Appointment</h2>
+            <p class="text-xs text-hospital-slate">Enter your 12-character booking reference (e.g. WFH-AGRA-8924)</p>
+          </div>
+        </div>
+
+        <form id="tracker-form" class="flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <input
+              type="text"
+              id="tracker-input"
+              placeholder="e.g. WFH-AGRA-XXXX"
+              required
+              class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-hospital-navy font-mono text-sm uppercase placeholder:normal-case placeholder:font-sans focus:outline-none focus:ring-2 focus:ring-hospital-teal"
+            />
+          </div>
+          <button
+            type="submit"
+            id="tracker-btn"
+            class="px-6 py-3 rounded-xl bg-hospital-teal hover:bg-hospital-teal-dark text-white font-bold text-xs uppercase tracking-wider transition-colors shadow-sm flex items-center justify-center gap-2 min-h-[44px]"
+          >
+            <span>Check Status</span>
+          </button>
+        </form>
+
+        <!-- Tracker Results Container -->
+        <div id="tracker-result" class="hidden mt-6 pt-6 border-t border-slate-100"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Booking Form Component -->
+  <AppointmentBooking />
+
+  <script>
+    const form = document.getElementById('tracker-form') as HTMLFormElement | null;
+    const input = document.getElementById('tracker-input') as HTMLInputElement | null;
+    const resultBox = document.getElementById('tracker-result');
+    const btn = document.getElementById('tracker-btn') as HTMLButtonElement | null;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!input || !resultBox || !btn) return;
+      const ref = input.value.trim().toUpperCase();
+      if (!ref) return;
+
+      btn.disabled = true;
+      btn.innerHTML = 'Searching...';
+      resultBox.classList.remove('hidden');
+      resultBox.innerHTML = '<p class="text-xs text-hospital-slate">Querying hospital appointment database...</p>';
+
+      try {
+        const res = await fetch(`/api/v1/appointments/reference/${encodeURIComponent(ref)}`);
+        const json = await res.json();
+
+        if (!res.ok || !json.success) {
+          resultBox.innerHTML = `
+            <div class="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
+              <span class="font-bold">Notice:</span>
+              <span>${json.error || 'No appointment found with this reference code. Please verify the code or call reception at 8490068558.'}</span>
+            </div>
+          `;
+          return;
+        }
+
+        const apt = json.data;
+        const statusColors: Record<string, string> = {
+          PENDING: 'bg-amber-100 text-amber-800 border-amber-200',
+          CONFIRMED: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          RESCHEDULED: 'bg-blue-100 text-blue-800 border-blue-200',
+          CANCELLED: 'bg-rose-100 text-rose-800 border-rose-200',
+          REJECTED: 'bg-slate-100 text-slate-800 border-slate-200',
+          COMPLETED: 'bg-teal-100 text-teal-800 border-teal-200',
+        };
+        const badgeClass = statusColors[apt.status] || 'bg-slate-100 text-slate-800';
+
+        resultBox.innerHTML = `
+          <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200 space-y-3">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div>
+                <span class="text-[11px] font-bold text-hospital-slate uppercase tracking-wider block">Reference Code</span>
+                <span class="font-mono text-base font-extrabold text-hospital-navy">${apt.reference}</span>
+              </div>
+              <span class="text-xs font-bold px-3 py-1 rounded-full border ${badgeClass}">
+                STATUS: ${apt.status}
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs pt-2 border-t border-slate-200">
+              <div>
+                <span class="text-hospital-slate block">Patient Name:</span>
+                <span class="font-semibold text-hospital-navy">${apt.patientName || 'Patient'}</span>
+              </div>
+              <div>
+                <span class="text-hospital-slate block">Service:</span>
+                <span class="font-semibold text-hospital-navy">${apt.serviceName}</span>
+              </div>
+              <div>
+                <span class="text-hospital-slate block">Scheduled Date & Time:</span>
+                <span class="font-semibold text-hospital-teal">${apt.preferredDate} (${apt.preferredTimeSlot.split('(')[0]})</span>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-slate-500 pt-1">
+              For any urgent modifications, please contact the front desk at <a href="tel:8490068558" class="text-hospital-teal font-bold hover:underline">8490068558</a>.
+            </p>
+          </div>
+        `;
+      } catch (err) {
+        resultBox.innerHTML = `
+          <div class="p-4 rounded-xl bg-red-50 text-red-800 text-xs">
+            Network error communicating with the appointment server. Please try again.
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Check Status</span>';
+      }
+    });
+  </script>
+</Layout>

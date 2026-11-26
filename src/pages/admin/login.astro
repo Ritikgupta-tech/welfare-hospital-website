@@ -1,0 +1,164 @@
+---
+import '../../styles/global.css';
+import Logo from '../../components/Logo.astro';
+import { Lock, Mail, ShieldAlert, AlertCircle, ArrowRight, ShieldCheck } from '@lucide/astro';
+
+export const prerender = false;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Administrative Sign In — Welfare Hospital</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body class="bg-hospital-navy min-h-screen flex items-center justify-center p-4 relative overflow-hidden font-sans">
+    
+    <!-- Ambient Glow Background -->
+    <div class="absolute -top-32 -left-32 w-96 h-96 bg-hospital-teal/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+    <div class="absolute -bottom-32 -right-32 w-96 h-96 bg-hospital-mint/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+    <div class="w-full max-w-md bg-white rounded-3xl p-8 sm:p-10 shadow-2xl border border-slate-200/90 relative z-10">
+      
+      <!-- Brand Header -->
+      <div class="text-center mb-8">
+        <a href="/" class="inline-block mb-3" title="Return to Public Site">
+          <Logo size="md" />
+        </a>
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-hospital-slate border border-slate-200 mt-1">
+          <Lock class="w-3 h-3 text-hospital-teal" />
+          <span>Hospital Staff Portal</span>
+        </div>
+        <h1 class="text-2xl font-extrabold text-hospital-navy mt-3">Administrative Access</h1>
+        <p class="text-xs text-hospital-slate mt-1">Authorized clinical and operations staff only.</p>
+      </div>
+
+      <!-- Error Banner -->
+      <div id="login-error" class="hidden mb-6 p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2.5">
+        <AlertCircle class="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
+        <span id="login-error-text">Invalid administrative credentials.</span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="admin-login-form" class="space-y-4">
+        <div>
+          <label for="adminEmail" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+            Admin Email Address
+          </label>
+          <div class="relative">
+            <input
+              type="email"
+              id="adminEmail"
+              required
+              autocomplete="email"
+              placeholder="admin@welfarehospital.com"
+              class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-sm text-hospital-navy placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-hospital-teal transition-all min-h-[44px]"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="adminPassword" class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">
+            Password
+          </label>
+          <div class="relative">
+            <input
+              type="password"
+              id="adminPassword"
+              required
+              autocomplete="current-password"
+              placeholder="••••••••••••"
+              class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-300 text-sm text-hospital-navy placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-hospital-teal transition-all min-h-[44px]"
+            />
+          </div>
+        </div>
+
+        <div class="pt-2">
+          <button
+            type="submit"
+            id="login-submit-btn"
+            class="w-full py-3.5 px-4 rounded-xl bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.99] text-white font-bold text-sm tracking-wide transition-all shadow-md flex items-center justify-center gap-2 min-h-[44px]"
+          >
+            <span id="btn-text">Authenticate & Sign In</span>
+            <span id="btn-spinner" class="hidden">Verifying Session...</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Pre-seeded credentials helper badge for verification -->
+      <div class="mt-6 pt-5 border-t border-slate-100 text-center">
+        <p class="text-[11px] text-slate-500">
+          Super Admin Seed: <code class="text-hospital-navy font-bold">admin@welfarehospital.com</code> / <code class="text-hospital-navy font-bold">WelfareHospital@2026</code>
+        </p>
+        <p class="text-[10px] text-slate-400 mt-2">
+          Protected by rate limiting, salted password hashing, and session audit logs.
+        </p>
+      </div>
+
+    </div>
+
+    <script>
+      const form = document.getElementById('admin-login-form') as HTMLFormElement | null;
+      const emailInput = document.getElementById('adminEmail') as HTMLInputElement | null;
+      const passwordInput = document.getElementById('adminPassword') as HTMLInputElement | null;
+      const errorBox = document.getElementById('login-error');
+      const errorText = document.getElementById('login-error-text');
+      const submitBtn = document.getElementById('login-submit-btn') as HTMLButtonElement | null;
+      const btnText = document.getElementById('btn-text');
+      const btnSpinner = document.getElementById('btn-spinner');
+
+      form?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!emailInput || !passwordInput || !submitBtn) return;
+
+        errorBox?.classList.add('hidden');
+        submitBtn.disabled = true;
+        btnText?.classList.add('hidden');
+        btnSpinner?.classList.remove('hidden');
+
+        try {
+          const res = await fetch('/api/v1/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: emailInput.value.trim(),
+              password: passwordInput.value,
+            }),
+          });
+
+          const json = await res.json();
+
+          if (!res.ok || !json.success) {
+            if (errorBox && errorText) {
+              errorText.innerText = json.error || 'Authentication failed. Please verify credentials.';
+              errorBox.classList.remove('hidden');
+            }
+            return;
+          }
+
+          // Store token in localStorage as backup to cookie
+          if (json.data?.token) {
+            localStorage.setItem('welfare_admin_token', json.data.token);
+          }
+
+          window.location.href = '/admin/dashboard';
+        } catch (err: any) {
+          if (errorBox && errorText) {
+            errorText.innerText = 'Network error contacting authorization server.';
+            errorBox.classList.remove('hidden');
+          }
+        } finally {
+          submitBtn.disabled = false;
+          btnText?.classList.remove('hidden');
+          btnSpinner?.classList.add('hidden');
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -3,13 +3,13 @@ import Logo from './Logo.astro';
 import { Calendar, Phone, Menu, X } from '@lucide/astro';
 
 const navLinks = [
-  { name: 'Home', href: '#hero' },
-  { name: 'About', href: '#about' },
-  { name: 'Services', href: '#services' },
-  { name: 'Doctors', href: '#doctors' },
-  { name: 'Why Us', href: '#why-us' },
-  { name: 'FAQ', href: '#faq' },
-  { name: 'Contact', href: '#contact' },
+  { name: 'Home', href: '/' },
+  { name: 'About', href: '/about' },
+  { name: 'Services', href: '/services' },
+  { name: 'Doctors', href: '/doctors' },
+  { name: 'Appointments', href: '/appointments' },
+  { name: 'FAQ', href: '/faq' },
+  { name: 'Contact', href: '/contact' },
 ];
 ---
 
@@ -18,10 +18,10 @@ const navLinks = [
     <div class="flex items-center justify-between h-20">
       
       <!-- Brand Logo -->
-      <a 
-        href="#hero" 
-        class="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal rounded-xl p-1 -ml-1 transition-transform hover:scale-[1.01] min-h-[44px]" 
-        aria-label="Welfare Hospital Agra - Back to top"
+      <a
+        href="/"
+        class="flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-hospital-teal rounded-xl p-1 -ml-1 transition-transform hover:scale-[1.01] min-h-[44px]"
+        aria-label="Welfare Hospital Agra - Home"
       >
         <Logo size="md" />
       </a>
@@ -51,7 +51,7 @@ const navLinks = [
         </a>
 
         <a
-          href="#appointments"
+          href="/appointments"
           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-white bg-hospital-teal hover:bg-hospital-teal-dark active:scale-[0.98] transition-all shadow-md shadow-hospital-teal/20 hover:shadow-lg hover:shadow-hospital-teal/30 min-h-[44px] hover:-translate-y-0.5"
         >
           <Calendar class="w-3.5 h-3.5 flex-shrink-0" aria-hidden="true" />
@@ -121,7 +121,7 @@ const navLinks = [
       </a>
 
       <a
-        href="#appointments"
+        href="/appointments"
         class="mobile-nav-link flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl text-sm font-bold text-white bg-hospital-teal hover:bg-hospital-teal-dark shadow-md min-h-[48px]"
       >
         <Calendar class="w-4 h-4" aria-hidden="true" />
