@@ -247,7 +247,6 @@ export async function prismaCreateAppointment(
         create: {
           previousStatus: 'PENDING',
           newStatus: 'PENDING',
-          changedByName: 'Patient Form Submission',
           notes: 'Initial request submitted by patient online.',
         },
       },
@@ -419,7 +418,6 @@ export async function prismaUpdateAppointmentStatus(
           previousStatus: prevStatus,
           newStatus,
           changedById: adminUser?.id || null,
-          changedByName: adminUser?.name || 'Administrator',
           notes: (notes || `Status updated from ${prevStatus} to ${newStatus}`) + rescheduleDetails,
         },
       },
@@ -430,7 +428,6 @@ export async function prismaUpdateAppointmentStatus(
   await prisma.auditLog.create({
     data: {
       userId: adminUser?.id || null,
-      userEmail: adminUser?.name || null,
       action: 'APPOINTMENT_STATUS_UPDATE',
       entityType: 'APPOINTMENT',
       entityId: apt.id,
@@ -454,7 +451,6 @@ export async function prismaUpdateAdminPassword(
   await prisma.auditLog.create({
     data: {
       userId: user.id,
-      userEmail: user.email,
       action: 'ADMIN_PASSWORD_ROTATED',
       entityType: 'ADMIN_USER',
       entityId: user.id,
@@ -497,6 +493,7 @@ export async function prismaGetDashboardMetrics(prisma: PrismaClient) {
     prisma.auditLog.findMany({
       take: 8,
       orderBy: { createdAt: 'desc' },
+      include: { user: true },
     }),
   ]);
 
@@ -508,10 +505,10 @@ export async function prismaGetDashboardMetrics(prisma: PrismaClient) {
     completedAppointments,
     todayAppointments,
     recentAppointments: recentAppointments.map(mapPrismaAppointment),
-    recentAuditLogs: recentAuditLogs.map((l) => ({
+    recentAuditLogs: recentAuditLogs.map((l: any) => ({
       id: l.id,
       userId: l.userId,
-      userEmail: l.userEmail,
+      userEmail: l.user?.email || null,
       action: l.action,
       entityType: l.entityType,
       entityId: l.entityId,
