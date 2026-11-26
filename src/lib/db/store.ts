@@ -52,6 +52,11 @@ function loadData(): DatabaseData {
       cachedData = JSON.parse(raw);
       if (cachedData) {
         cachedData.adminUsers = cachedData.adminUsers || [];
+        // Ensure super admin has valid hash for WelfareHospital@2026
+        const admin = cachedData.adminUsers.find((u) => u.email === 'admin@welfarehospital.com');
+        if (admin && admin.passwordHash.startsWith('$2a$12$e63h7e8oIuNskpQ6eYfS')) {
+          admin.passwordHash = '$2b$10$IKaAHa/mbmGmzKzxt4m8Ku4rNS9C3VsIRiKeDtRtahpWnNnm8ACjq';
+        }
         cachedData.patients = cachedData.patients || [];
         cachedData.doctors = cachedData.doctors || [];
         cachedData.services = cachedData.services || [];
@@ -86,7 +91,7 @@ function saveData(data: DatabaseData): void {
 function createSeedData(): DatabaseData {
   const now = new Date().toISOString();
   // Pre-hashed for WelfareHospital@2026
-  const defaultAdminHash = '$2a$12$e63h7e8oIuNskpQ6eYfS.e0lE6XW6Jg9mZ2rGv0q6N6T5B7tH4h.C';
+  const defaultAdminHash = '$2b$10$IKaAHa/mbmGmzKzxt4m8Ku4rNS9C3VsIRiKeDtRtahpWnNnm8ACjq';
 
   const defaultAdmin: AdminUser = {
     id: 'usr_admin_001',
