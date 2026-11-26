@@ -13,6 +13,20 @@ import type {
   Service,
 } from '../types';
 import { hashPassword } from '../auth/password';
+import { getPrismaClient } from './prisma';
+import * as prismaRepo from './prismaRepository';
+export {
+  ConcurrencyConflictError,
+  StatusTransitionError,
+  VALID_STATUS_TRANSITIONS,
+  generateAppointmentReference,
+} from './common';
+import {
+  ConcurrencyConflictError,
+  StatusTransitionError,
+  VALID_STATUS_TRANSITIONS,
+  generateAppointmentReference,
+} from './common';
 
 interface DatabaseData {
   adminUsers: AdminUser[];
@@ -208,11 +222,29 @@ function createSeedData(): DatabaseData {
 // ---------------- Repository Methods ---------------- //
 
 export async function getServices(): Promise<Service[]> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      const s = await prismaRepo.prismaGetServices(prisma);
+      if (s && s.length > 0) return s;
+    } catch (e) {
+      console.warn('[DB] Prisma getServices error, falling back:', e);
+    }
+  }
   const db = loadData();
   return db.services.filter((s) => s.isPublished);
 }
 
 export async function findServiceById(idOrNameOrSlug: string): Promise<Service | undefined> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      const s = await prismaRepo.prismaFindServiceById(prisma, idOrNameOrSlug);
+      if (s) return s;
+    } catch (e) {
+      console.warn('[DB] Prisma findServiceById error, falling back:', e);
+    }
+  }
   const db = loadData();
   if (!idOrNameOrSlug) return undefined;
   const clean = idOrNameOrSlug.trim().toLowerCase();
@@ -251,21 +283,57 @@ export async function findServiceById(idOrNameOrSlug: string): Promise<Service |
 }
 
 export async function getDoctors(): Promise<Doctor[]> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      const d = await prismaRepo.prismaGetDoctors(prisma);
+      if (d && d.length > 0) return d;
+    } catch (e) {
+      console.warn('[DB] Prisma getDoctors error, falling back:', e);
+    }
+  }
   const db = loadData();
   return db.doctors.filter((d) => d.isPublished);
 }
 
 export async function findDoctorById(id: string): Promise<Doctor | undefined> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      const d = await prismaRepo.prismaFindDoctorById(prisma, id);
+      if (d) return d;
+    } catch (e) {
+      console.warn('[DB] Prisma findDoctorById error, falling back:', e);
+    }
+  }
   const db = loadData();
   return db.doctors.find((d) => d.id === id);
 }
 
 export async function findAdminByEmail(email: string): Promise<AdminUser | undefined> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      const u = await prismaRepo.prismaFindAdminByEmail(prisma, email);
+      if (u) return u;
+    } catch (e) {
+      console.warn('[DB] Prisma findAdminByEmail error, falling back:', e);
+    }
+  }
   const db = loadData();
   return db.adminUsers.find((u) => u.email.toLowerCase() === email.toLowerCase());
 }
 
 export async function updateAdminLastLogin(userId: string): Promise<void> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      await prismaRepo.prismaUpdateAdminLastLogin(prisma, userId);
+      return;
+    } catch (e) {
+      console.warn('[DB] Prisma updateAdminLastLogin error, falling back:', e);
+    }
+  }
   const db = loadData();
   const user = db.adminUsers.find((u) => u.id === userId);
   if (user) {
@@ -273,15 +341,6 @@ export async function updateAdminLastLogin(userId: string): Promise<void> {
     user.updatedAt = new Date().toISOString();
     saveData(db);
   }
-}
-
-export function generateAppointmentReference(): string {
-  const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'; // Unambiguous chars
-  let rand = '';
-  for (let i = 0; i < 4; i++) {
-    rand += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return `WFH-AGRA-${rand}`;
 }
 
 export async function createAppointment(data: {
@@ -294,6 +353,15 @@ export async function createAppointment(data: {
   symptomsOrNotes?: string | null;
   idempotencyKey?: string | null;
 }): Promise<Appointment & { isIdempotentReplay?: boolean }> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      return await prismaRepo.prismaCreateAppointment(prisma, data);
+    } catch (e) {
+      console.warn('[DB] Prisma createAppointment error, falling back:', e);
+    }
+  }
+
   const db = loadData();
   const now = new Date().toISOString();
 
@@ -418,6 +486,16 @@ export async function createAppointment(data: {
 }
 
 export async function findAppointmentByReference(reference: string): Promise<Appointment | null> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      const a = await prismaRepo.prismaFindAppointmentByReference(prisma, reference);
+      if (a) return a;
+    } catch (e) {
+      console.warn('[DB] Prisma findAppointmentByReference error, falling back:', e);
+    }
+  }
+
   const db = loadData();
   const cleanRef = reference.trim().toUpperCase();
   const apt = db.appointments.find((a) => a.reference === cleanRef);
@@ -466,6 +544,15 @@ export async function listAppointments(filters: {
   page?: number;
   limit?: number;
 }): Promise<{ appointments: Appointment[]; total: number; page: number; totalPages: number }> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      return await prismaRepo.prismaListAppointments(prisma, filters);
+    } catch (e) {
+      console.warn('[DB] Prisma listAppointments error, falling back:', e);
+    }
+  }
+
   const db = loadData();
   let list = [...db.appointments];
 
@@ -508,6 +595,16 @@ export async function listAppointments(filters: {
 }
 
 export async function getAppointmentById(id: string): Promise<Appointment | null> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      const a = await prismaRepo.prismaGetAppointmentById(prisma, id);
+      if (a) return a;
+    } catch (e) {
+      console.warn('[DB] Prisma getAppointmentById error, falling back:', e);
+    }
+  }
+
   const db = loadData();
   const apt = db.appointments.find((a) => a.id === id || a.reference === id);
   if (!apt) return null;
@@ -520,29 +617,6 @@ export async function getAppointmentById(id: string): Promise<Appointment | null
   };
 }
 
-export class StatusTransitionError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'StatusTransitionError';
-  }
-}
-
-export class ConcurrencyConflictError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ConcurrencyConflictError';
-  }
-}
-
-export const VALID_STATUS_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]> = {
-  PENDING: ['CONFIRMED', 'RESCHEDULED', 'CANCELLED', 'REJECTED'],
-  CONFIRMED: ['RESCHEDULED', 'COMPLETED', 'CANCELLED'],
-  RESCHEDULED: ['CONFIRMED', 'COMPLETED', 'CANCELLED'],
-  CANCELLED: ['PENDING'],
-  REJECTED: ['PENDING'],
-  COMPLETED: [],
-};
-
 export async function updateAppointmentStatus(
   id: string,
   newStatus: AppointmentStatus,
@@ -551,6 +625,26 @@ export async function updateAppointmentStatus(
   newSchedule?: { preferredDate?: string; preferredTimeSlot?: string },
   expectedUpdatedAt?: string
 ): Promise<Appointment | null> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      return await prismaRepo.prismaUpdateAppointmentStatus(
+        prisma,
+        id,
+        newStatus,
+        adminUser,
+        notes,
+        newSchedule,
+        expectedUpdatedAt
+      );
+    } catch (e) {
+      if (e instanceof StatusTransitionError || e instanceof ConcurrencyConflictError) {
+        throw e;
+      }
+      console.warn('[DB] Prisma updateAppointmentStatus error, falling back:', e);
+    }
+  }
+
   const db = loadData();
   const apt = db.appointments.find((a) => a.id === id || a.reference === id);
   if (!apt) return null;
@@ -629,6 +723,15 @@ export async function updateAppointmentStatus(
 }
 
 export async function updateAdminPassword(userId: string, newPasswordHash: string): Promise<boolean> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      return await prismaRepo.prismaUpdateAdminPassword(prisma, userId, newPasswordHash);
+    } catch (e) {
+      console.warn('[DB] Prisma updateAdminPassword error, falling back:', e);
+    }
+  }
+
   const db = loadData();
   const user = db.adminUsers.find((u) => u.id === userId);
   if (!user) return false;
@@ -661,6 +764,15 @@ export async function getDashboardMetrics(): Promise<{
   recentAppointments: Appointment[];
   recentAuditLogs: AuditLog[];
 }> {
+  const prisma = getPrismaClient();
+  if (prisma) {
+    try {
+      return await prismaRepo.prismaGetDashboardMetrics(prisma);
+    } catch (e) {
+      console.warn('[DB] Prisma getDashboardMetrics error, falling back:', e);
+    }
+  }
+
   const db = loadData();
   const today = new Date().toISOString().split('T')[0];
 
