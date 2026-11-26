@@ -21,14 +21,13 @@
     "astro": "^7.3.8",
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.3",
-    "lucide-astro": "^0.556.0",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "prisma": "^8.0.0-rc.35",
+    "prisma": "^7.10.1",
     "vitest": "^5.1.2"
   }
 }
