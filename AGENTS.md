@@ -20,3 +20,13 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## Database & Cloud Backend (Neon / Lakebase Postgres)
+
+- Provider: Neon PostgreSQL (`ep-proud-tree-bezkjk7d-pooler.c-9.us-east-2.aws.neon.tech`)
+- Project Identifier: `calm-term-32636029`
+- Schema & Config: `prisma/schema.prisma`, `prisma.config.ts`, `src/lib/db/prisma.ts`
+- Migrations: `npm run db:migrate` (executes `prisma/migrations/0_init/migration.sql`)
+- Data Seeding: `npm run db:seed` (executes `src/lib/db/migrate.ts`)
+- Automated Setup: `npm run db:setup` or `node scripts/deploy-database.mjs`
+
