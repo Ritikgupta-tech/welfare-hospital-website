@@ -14,7 +14,7 @@ const navLinks = [
 ---
 
 <header id="main-header" class="sticky top-0 z-50 glass-nav transition-all duration-300">
-  <div class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+  <div class="max-w-7xl 2xl:max-w-[1536px] mx-auto px-3.5 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-20">
       
       <!-- Brand Logo -->
@@ -27,7 +27,7 @@ const navLinks = [
       </a>
 
       <!-- Desktop Navigation Links -->
-      <nav class="hidden lg:flex items-center gap-7" aria-label="Main Navigation">
+      <nav class="hidden lg:flex items-center gap-4 xl:gap-7" aria-label="Main Navigation">
         {navLinks.map((link) => (
           <a
             href={link.href}

@@ -10,7 +10,7 @@ export const prerender = false;
     
     <!-- Left Column: Clinic Master Configuration -->
     <div class="lg:col-span-5 space-y-6">
-      <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs space-y-4">
+      <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs space-y-4">
         <h3 class="text-sm font-bold text-hospital-navy uppercase tracking-wider">Institution Profile</h3>
         
         <div class="space-y-3 text-xs">
@@ -53,13 +53,13 @@ export const prerender = false;
     </div>
 
     <!-- Right Column: Live Security Audit Logs -->
-    <div class="lg:col-span-7 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs space-y-4">
+    <div class="lg:col-span-7 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-sm font-bold text-hospital-navy uppercase tracking-wider">Security & Operational Audit Log</h3>
           <p class="text-xs text-slate-500">Immutable record of logins, status transitions, and appointment creations</p>
         </div>
-        <button id="refresh-audit-btn" type="button" class="text-xs font-bold text-hospital-teal hover:underline">
+        <button id="refresh-audit-btn" type="button" class="text-xs font-bold text-hospital-teal hover:underline cursor-pointer">
           Refresh
         </button>
       </div>
@@ -72,7 +72,7 @@ export const prerender = false;
     </div>
 
     <!-- Full-Width Bottom Section: Notification Dispatch History -->
-    <div class="lg:col-span-12 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs space-y-4">
+    <div class="lg:col-span-12 bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-sm font-bold text-hospital-navy uppercase tracking-wider flex items-center gap-2">
@@ -81,13 +81,13 @@ export const prerender = false;
           </h3>
           <p class="text-xs text-slate-500">Live dispatch tracking for appointment confirmations, patient status notices, and hospital staff alerts</p>
         </div>
-        <button id="refresh-notifications-btn" type="button" class="text-xs font-bold text-hospital-teal hover:underline">
+        <button id="refresh-notifications-btn" type="button" class="text-xs font-bold text-hospital-teal hover:underline cursor-pointer">
           Refresh
         </button>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs">
+        <table class="w-full text-left text-xs min-w-[700px]">
           <thead>
             <tr class="border-b border-slate-200 text-slate-400 uppercase text-[10px] tracking-wider">
               <th class="py-2.5 px-3 font-semibold">Timestamp</th>

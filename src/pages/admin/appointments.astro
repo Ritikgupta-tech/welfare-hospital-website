@@ -20,7 +20,7 @@ export const prerender = false;
 <AdminLayout title="Appointment Management" activeNav="appointments">
   
   <!-- Action Header & Filters -->
-  <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs mb-6 space-y-4">
+  <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs mb-6 space-y-4">
     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
         <h2 class="text-lg font-extrabold text-hospital-navy">Patient Appointments</h2>
@@ -79,7 +79,7 @@ export const prerender = false;
   <!-- Appointments Data Table -->
   <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
+      <table class="w-full text-left text-xs min-w-[720px]">
         <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
           <tr>
             <th class="px-6 py-4">Reference</th>
@@ -110,8 +110,8 @@ export const prerender = false;
   </div>
 
   <!-- Status Update Modal -->
-  <div id="status-modal" class="hidden fixed inset-0 z-50 bg-hospital-navy/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="w-full max-w-lg bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5">
+  <div id="status-modal" class="hidden fixed inset-0 z-50 bg-hospital-navy/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl border border-slate-200 space-y-5">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-base font-bold text-hospital-navy">Update Appointment Status</h3>

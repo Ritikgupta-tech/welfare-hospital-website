@@ -6,7 +6,7 @@ export const prerender = false;
 ---
 
 <AdminLayout title="Doctor & Physician Profiles" activeNav="doctors">
-  <div class="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+  <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
     <div>
       <h2 class="text-lg font-extrabold text-hospital-navy">Supervising Physician & Medical Staff</h2>
       <p class="text-xs text-slate-500">Manage Dr. Opee Rajput's profile, consultation schedule, and visiting physicians.</p>
@@ -15,7 +15,7 @@ export const prerender = false;
 
   <div class="bg-white rounded-2xl border border-slate-200/90 shadow-xs overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs">
+      <table class="w-full text-left text-xs min-w-[650px]">
         <thead class="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
           <tr>
             <th class="px-6 py-4">Physician Name</th>
@@ -36,8 +36,8 @@ export const prerender = false;
   </div>
 
   <!-- Edit Schedule Modal -->
-  <div id="doctor-modal" class="hidden fixed inset-0 z-50 bg-hospital-navy/60 backdrop-blur-xs flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-4">
+  <div id="doctor-modal" class="hidden fixed inset-0 z-50 bg-hospital-navy/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+    <div class="w-full max-w-md max-h-[90vh] overflow-y-auto bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-2xl border border-slate-200 space-y-4">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <h3 class="text-base font-bold text-hospital-navy">Update OPD Timings</h3>
         <button id="close-doc-modal" class="p-1 rounded-lg text-slate-400 hover:bg-slate-100">&times;</button>
