@@ -50,6 +50,67 @@ export const prerender = false;
           <span>Configured & verified against clinical practice record</span>
         </div>
       </div>
+
+      <!-- Security & Password Rotation Card -->
+      <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-xs space-y-4">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+          <h3 class="text-sm font-bold text-hospital-navy uppercase tracking-wider flex items-center gap-2">
+            <ShieldCheck class="w-4 h-4 text-hospital-teal" />
+            Security & Password Rotation
+          </h3>
+        </div>
+
+        <p class="text-xs text-slate-500">
+          Rotate administrative account credentials. New passwords must be at least 10 characters and include uppercase, lowercase, number, and special character.
+        </p>
+
+        <div id="pwd-change-alert" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+
+        <form id="change-password-form" class="space-y-3 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Current Password</label>
+            <input
+              type="password"
+              id="current-password"
+              required
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-hospital-navy placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-hospital-teal"
+              placeholder="Enter current password"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">New Secure Password</label>
+            <input
+              type="password"
+              id="new-password"
+              required
+              minlength="10"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-hospital-navy placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-hospital-teal"
+              placeholder="Minimum 10 characters"
+            />
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Confirm New Password</label>
+            <input
+              type="password"
+              id="confirm-password"
+              required
+              minlength="10"
+              class="w-full px-3 py-2 rounded-xl border border-slate-300 text-hospital-navy placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-hospital-teal"
+              placeholder="Re-enter new password"
+            />
+          </div>
+
+          <button
+            type="submit"
+            id="rotate-password-btn"
+            class="w-full py-2.5 rounded-xl bg-hospital-navy hover:bg-slate-800 text-white font-bold text-xs transition-colors cursor-pointer"
+          >
+            Rotate Password Securely
+          </button>
+        </form>
+      </div>
     </div>
 
     <!-- Right Column: Live Security Audit Logs -->
@@ -204,5 +265,58 @@ export const prerender = false;
     document.getElementById('refresh-notifications-btn')?.addEventListener('click', loadNotifications);
     loadAuditLogs();
     loadNotifications();
+
+    // Password rotation form handler
+    const pwdForm = document.getElementById('change-password-form') as HTMLFormElement | null;
+    const pwdAlert = document.getElementById('pwd-change-alert');
+    const rotateBtn = document.getElementById('rotate-password-btn') as HTMLButtonElement | null;
+
+    pwdForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const currentPassword = (document.getElementById('current-password') as HTMLInputElement)?.value;
+      const newPassword = (document.getElementById('new-password') as HTMLInputElement)?.value;
+      const confirmPassword = (document.getElementById('confirm-password') as HTMLInputElement)?.value;
+
+      if (!pwdAlert) return;
+
+      if (newPassword !== confirmPassword) {
+        pwdAlert.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200';
+        pwdAlert.innerText = 'New password and confirmation do not match.';
+        pwdAlert.classList.remove('hidden');
+        return;
+      }
+
+      if (rotateBtn) rotateBtn.disabled = true;
+
+      try {
+        const res = await fetch('/api/v1/auth/change-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ currentPassword, newPassword }),
+        });
+
+        const json = await res.json().catch(() => null);
+
+        if (res.ok && json?.success) {
+          pwdAlert.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+          pwdAlert.innerText = 'Password rotated successfully. Redirecting to login...';
+          pwdAlert.classList.remove('hidden');
+          pwdForm.reset();
+          setTimeout(() => {
+            window.location.href = '/admin/login?message=password_rotated';
+          }, 2000);
+        } else {
+          pwdAlert.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200';
+          pwdAlert.innerText = json?.error || 'Failed to rotate password.';
+          pwdAlert.classList.remove('hidden');
+        }
+      } catch (err: any) {
+        pwdAlert.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200';
+        pwdAlert.innerText = 'Network error while attempting password rotation.';
+        pwdAlert.classList.remove('hidden');
+      } finally {
+        if (rotateBtn) rotateBtn.disabled = false;
+      }
+    });
   </script>
 </AdminLayout>

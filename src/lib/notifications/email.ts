@@ -160,6 +160,10 @@ export function generateAppointmentStatusUpdateEmail(
     <div style="padding: 12px 16px; background-color: #e8f7f4; border-radius: 8px; color: #087f8c; font-weight: bold; font-size: 16px;">
       STATUS: ${newStatus}
     </div>
+    <div style="margin-top: 16px; padding: 12px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px;">
+      <div><strong>Scheduled Date:</strong> ${appointment.preferredDate}</div>
+      <div style="margin-top: 4px;"><strong>Consultation Slot:</strong> ${appointment.preferredTimeSlot}</div>
+    </div>
     ${notes ? `<p style="margin-top: 16px; color: #475569;"><strong>Notes from hospital desk:</strong> ${notes}</p>` : ''}
     <p style="margin-top: 24px; font-size: 13px; color: #64748b;">
       For questions, please call Welfare Hospital at <a href="tel:8490068558">8490068558</a>.

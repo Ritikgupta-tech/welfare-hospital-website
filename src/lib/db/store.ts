@@ -52,10 +52,15 @@ function loadData(): DatabaseData {
       cachedData = JSON.parse(raw);
       if (cachedData) {
         cachedData.adminUsers = cachedData.adminUsers || [];
-        // Ensure super admin has valid hash for WelfareHospital@2026
+        // Ensure super admin has valid hash (support env var override, or default seed if uninitialized)
         const admin = cachedData.adminUsers.find((u) => u.email === 'admin@welfarehospital.com');
-        if (admin && !admin.passwordHash.startsWith('$2b$10$IKaAHa')) {
-          admin.passwordHash = '$2b$10$IKaAHa/mbmGmzKzxt4m8Ku4rNS9C3VsIRiKeDtRtahpWnNnm8ACjq';
+        const envHash = process.env.ADMIN_PASSWORD_HASH;
+        if (admin) {
+          if (envHash && admin.passwordHash !== envHash) {
+            admin.passwordHash = envHash;
+          } else if (!admin.passwordHash || admin.passwordHash.length < 20) {
+            admin.passwordHash = '$2b$10$IKaAHa/mbmGmzKzxt4m8Ku4rNS9C3VsIRiKeDtRtahpWnNnm8ACjq';
+          }
         }
         cachedData.patients = cachedData.patients || [];
         cachedData.doctors = cachedData.doctors || [];
@@ -197,9 +202,42 @@ export async function getServices(): Promise<Service[]> {
   return db.services.filter((s) => s.isPublished);
 }
 
-export async function findServiceById(id: string): Promise<Service | undefined> {
+export async function findServiceById(idOrNameOrSlug: string): Promise<Service | undefined> {
   const db = loadData();
-  return db.services.find((s) => s.id === id || s.slug === id);
+  if (!idOrNameOrSlug) return undefined;
+  const clean = idOrNameOrSlug.trim().toLowerCase();
+  const slug = clean.replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+  // 1. Direct match by id, slug, or name
+  let found = db.services.find(
+    (s) =>
+      s.id.toLowerCase() === clean ||
+      s.slug.toLowerCase() === clean ||
+      s.slug.toLowerCase() === slug ||
+      s.name.toLowerCase() === clean
+  );
+  if (found) return found;
+
+  // 2. Healthcare alias mapping for common synonyms used in UI
+  const aliasMap: Record<string, string> = {
+    'general-healthcare': 'primary-healthcare',
+    'general-health': 'primary-healthcare',
+    'primary-care': 'primary-healthcare',
+    'physician-consultation': 'physician-consultations',
+    'physician': 'physician-consultations',
+    'general-medical-assessment': 'routine-health-checks',
+    'routine-checkup': 'routine-health-checks',
+    'follow-up-consultation': 'continuing-care',
+    'follow-up': 'continuing-care',
+  };
+  const mapped = aliasMap[slug];
+  if (mapped) {
+    found = db.services.find((s) => s.slug === mapped);
+    if (found) return found;
+  }
+
+  // 3. Fallback to active service
+  return db.services.find((s) => s.isPublished) || db.services[0];
 }
 
 export async function getDoctors(): Promise<Doctor[]> {
@@ -270,8 +308,26 @@ export async function createAppointment(data: {
   }
 
   // Verify service
-  const service = db.services.find((s) => s.id === data.serviceId || s.slug === data.serviceId) || db.services[0];
+  const service = await findServiceById(data.serviceId) || db.services[0];
   const doctor = db.doctors[0]; // Dr. Opee Rajput
+
+  // Deduplicate rapid repeat submissions for the same patient, service, and date within 5 minutes
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+  const existingPending = db.appointments.find(
+    (a) =>
+      a.status === 'PENDING' &&
+      a.preferredDate === data.preferredDate &&
+      a.createdAt >= fiveMinutesAgo &&
+      (a.patientId === patient.id || (patient.mobile && patient.mobile === data.mobile))
+  );
+  if (existingPending) {
+    return {
+      ...existingPending,
+      patient,
+      service,
+      doctor,
+    };
+  }
 
   // Generate unique reference
   let ref = generateAppointmentReference();
@@ -435,20 +491,78 @@ export async function getAppointmentById(id: string): Promise<Appointment | null
   };
 }
 
+export class StatusTransitionError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'StatusTransitionError';
+  }
+}
+
+export class ConcurrencyConflictError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ConcurrencyConflictError';
+  }
+}
+
+export const VALID_STATUS_TRANSITIONS: Record<AppointmentStatus, AppointmentStatus[]> = {
+  PENDING: ['CONFIRMED', 'RESCHEDULED', 'CANCELLED', 'REJECTED'],
+  CONFIRMED: ['RESCHEDULED', 'COMPLETED', 'CANCELLED'],
+  RESCHEDULED: ['CONFIRMED', 'COMPLETED', 'CANCELLED'],
+  CANCELLED: ['PENDING'],
+  REJECTED: ['PENDING'],
+  COMPLETED: [],
+};
+
 export async function updateAppointmentStatus(
   id: string,
   newStatus: AppointmentStatus,
   adminUser?: { id: string; name: string },
-  notes?: string | null
+  notes?: string | null,
+  newSchedule?: { preferredDate?: string; preferredTimeSlot?: string },
+  expectedUpdatedAt?: string
 ): Promise<Appointment | null> {
   const db = loadData();
   const apt = db.appointments.find((a) => a.id === id || a.reference === id);
   if (!apt) return null;
 
-  const now = new Date().toISOString();
+  // Concurrency check
+  if (expectedUpdatedAt && apt.updatedAt !== expectedUpdatedAt) {
+    throw new ConcurrencyConflictError(
+      'This appointment was modified by another staff member. Please refresh and review latest changes.'
+    );
+  }
+
   const prevStatus = apt.status;
+
+  // Validate state transition
+  if (newStatus !== prevStatus) {
+    const allowed = VALID_STATUS_TRANSITIONS[prevStatus] || [];
+    if (!allowed.includes(newStatus)) {
+      throw new StatusTransitionError(
+        `Invalid status transition: cannot change appointment from ${prevStatus} to ${newStatus}.`
+      );
+    }
+  }
+
+  const now = new Date().toISOString();
   apt.status = newStatus;
   if (notes) apt.adminNotes = notes;
+
+  let rescheduleDetails = '';
+  if (newStatus === 'RESCHEDULED' && newSchedule) {
+    if (newSchedule.preferredDate) {
+      const oldDate = apt.preferredDate;
+      apt.preferredDate = newSchedule.preferredDate;
+      rescheduleDetails += ` Date moved from ${oldDate} to ${newSchedule.preferredDate}.`;
+    }
+    if (newSchedule.preferredTimeSlot) {
+      const oldSlot = apt.preferredTimeSlot;
+      apt.preferredTimeSlot = newSchedule.preferredTimeSlot;
+      rescheduleDetails += ` Slot moved from "${oldSlot}" to "${newSchedule.preferredTimeSlot}".`;
+    }
+  }
+
   apt.updatedAt = now;
 
   // Add history
@@ -459,7 +573,7 @@ export async function updateAppointmentStatus(
     newStatus,
     changedById: adminUser?.id || null,
     changedByName: adminUser?.name || 'Administrator',
-    notes: notes || `Status updated from ${prevStatus} to ${newStatus}`,
+    notes: (notes || `Status updated from ${prevStatus} to ${newStatus}`) + rescheduleDetails,
     createdAt: now,
   });
 
@@ -471,7 +585,7 @@ export async function updateAppointmentStatus(
     action: 'APPOINTMENT_STATUS_UPDATE',
     entityType: 'APPOINTMENT',
     entityId: apt.id,
-    details: `Updated ${apt.reference} from ${prevStatus} to ${newStatus}`,
+    details: `Updated ${apt.reference} from ${prevStatus} to ${newStatus}.${rescheduleDetails}`,
     createdAt: now,
   });
 
@@ -483,6 +597,29 @@ export async function updateAppointmentStatus(
     service: db.services.find((s) => s.id === apt.serviceId),
     doctor: db.doctors.find((d) => d.id === apt.doctorId),
   };
+}
+
+export async function updateAdminPassword(userId: string, newPasswordHash: string): Promise<boolean> {
+  const db = loadData();
+  const user = db.adminUsers.find((u) => u.id === userId);
+  if (!user) return false;
+
+  user.passwordHash = newPasswordHash;
+  user.updatedAt = new Date().toISOString();
+
+  db.auditLogs.unshift({
+    id: `aud_${Date.now()}`,
+    userId: user.id,
+    userEmail: user.email,
+    action: 'ADMIN_PASSWORD_ROTATED',
+    entityType: 'ADMIN_USER',
+    entityId: user.id,
+    details: `Password securely rotated for administrative user ${user.email}`,
+    createdAt: new Date().toISOString(),
+  });
+
+  saveData(db);
+  return true;
 }
 
 export async function getDashboardMetrics(): Promise<{

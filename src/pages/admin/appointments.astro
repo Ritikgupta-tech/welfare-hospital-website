@@ -134,6 +134,21 @@ export const prerender = false;
           </select>
         </div>
 
+        <!-- Reschedule Specific Fields -->
+        <div id="modal-reschedule-group" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-slate-50 rounded-xl border border-slate-200">
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-hospital-navy mb-1">New Consultation Date</label>
+            <input type="date" id="modal-reschedule-date" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs text-hospital-navy focus:bg-white" />
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold uppercase tracking-wider text-hospital-navy mb-1">New Time Slot</label>
+            <select id="modal-reschedule-slot" class="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs font-semibold text-hospital-navy focus:bg-white">
+              <option value="Morning (10:00 AM - 01:00 PM)">Morning (10:00 AM - 01:00 PM)</option>
+              <option value="Evening (05:00 PM - 08:00 PM)">Evening (05:00 PM - 08:00 PM)</option>
+            </select>
+          </div>
+        </div>
+
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-hospital-navy mb-1.5">Administrative & Patient Notes</label>
           <textarea
@@ -281,10 +296,38 @@ export const prerender = false;
           if (modalRef) modalRef.innerText = ref;
           if (modalSelect) modalSelect.value = status;
           if (modalNotes) modalNotes.value = '';
+
+          const apt = appointmentsCache.find((a) => a.id === selectedAppointmentId);
+          if (modalRescheduleDate) {
+            modalRescheduleDate.value = apt?.preferredDate || new Date().toISOString().split('T')[0];
+            modalRescheduleDate.min = new Date().toISOString().split('T')[0];
+          }
+          if (modalRescheduleSlot && apt?.preferredTimeSlot) {
+            modalRescheduleSlot.value = apt.preferredTimeSlot;
+          }
+
+          if (status === 'RESCHEDULED') {
+            modalRescheduleGroup?.classList.remove('hidden');
+          } else {
+            modalRescheduleGroup?.classList.add('hidden');
+          }
+
           modal?.classList.remove('hidden');
         });
       });
     }
+
+    const modalRescheduleGroup = document.getElementById('modal-reschedule-group');
+    const modalRescheduleDate = document.getElementById('modal-reschedule-date') as HTMLInputElement | null;
+    const modalRescheduleSlot = document.getElementById('modal-reschedule-slot') as HTMLSelectElement | null;
+
+    modalSelect?.addEventListener('change', () => {
+      if (modalSelect.value === 'RESCHEDULED') {
+        modalRescheduleGroup?.classList.remove('hidden');
+      } else {
+        modalRescheduleGroup?.classList.add('hidden');
+      }
+    });
 
     // Modal controls
     modalCloseBtn?.addEventListener('click', () => modal?.classList.add('hidden'));
@@ -295,18 +338,40 @@ export const prerender = false;
       const newStatus = modalSelect.value;
       const notes = modalNotes?.value.trim() || undefined;
 
+      const apt = appointmentsCache.find((a) => a.id === selectedAppointmentId);
+      const payload: any = {
+        status: newStatus,
+        notes,
+        expectedUpdatedAt: apt?.updatedAt,
+      };
+
+      if (newStatus === 'RESCHEDULED') {
+        if (modalRescheduleDate && modalRescheduleDate.value) {
+          payload.preferredDate = modalRescheduleDate.value;
+        }
+        if (modalRescheduleSlot && modalRescheduleSlot.value) {
+          payload.preferredTimeSlot = modalRescheduleSlot.value;
+        }
+      }
+
       try {
         const res = await fetch(`/api/v1/admin/appointments/${selectedAppointmentId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: newStatus, notes }),
+          body: JSON.stringify(payload),
         });
 
-        if (res.ok) {
+        const json = await res.json().catch(() => null);
+
+        if (res.ok && json?.success) {
+          modal?.classList.add('hidden');
+          fetchAppointments();
+        } else if (res.status === 409 || json?.isConflict) {
+          alert('Conflict: This appointment was updated by another staff member. Refreshing records.');
           modal?.classList.add('hidden');
           fetchAppointments();
         } else {
-          alert('Failed to update status.');
+          alert(json?.error || 'Failed to update appointment status.');
         }
       } catch (err) {
         alert('Error saving status update.');

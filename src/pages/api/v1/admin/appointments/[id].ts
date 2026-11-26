@@ -1,6 +1,12 @@
 import type { APIRoute } from 'astro';
 import { extractBearerToken, extractCookieToken, verifyToken } from '../../../../../lib/auth/jwt';
-import { getAppointmentById, recordNotification, updateAppointmentStatus } from '../../../../../lib/db/store';
+import {
+  ConcurrencyConflictError,
+  StatusTransitionError,
+  getAppointmentById,
+  recordNotification,
+  updateAppointmentStatus,
+} from '../../../../../lib/db/store';
 import { generateAppointmentStatusUpdateEmail, sendEmailNotification } from '../../../../../lib/notifications/email';
 import { jsonResponse } from '../../../../../lib/security/headers';
 import { updateAppointmentStatusSchema } from '../../../../../lib/validation/schemas';
@@ -45,8 +51,17 @@ export const PATCH: APIRoute = async ({ params, request }) => {
       return jsonResponse({ success: false, error: validation.error.issues[0]?.message || 'Invalid status data' }, 400);
     }
 
-    const { status, notes } = validation.data;
-    const updated = await updateAppointmentStatus(id, status, { id: user.userId, name: user.name }, notes);
+    const { status, notes, preferredDate, preferredTimeSlot } = validation.data;
+    const expectedUpdatedAt = body?.expectedUpdatedAt;
+
+    const updated = await updateAppointmentStatus(
+      id,
+      status,
+      { id: user.userId, name: user.name },
+      notes,
+      { preferredDate, preferredTimeSlot },
+      expectedUpdatedAt
+    );
 
     if (!updated) {
       return jsonResponse({ success: false, error: 'Appointment not found to update' }, 404);
@@ -63,7 +78,13 @@ export const PATCH: APIRoute = async ({ params, request }) => {
         channel: 'EMAIL',
         templateName: `STATUS_${status}`,
         subject: emailMsg.subject,
-        payloadJson: JSON.stringify({ reference: updated.reference, status, notes }),
+        payloadJson: JSON.stringify({
+          reference: updated.reference,
+          status,
+          notes,
+          preferredDate: updated.preferredDate,
+          preferredTimeSlot: updated.preferredTimeSlot,
+        }),
         status: 'SENT',
       });
     }
@@ -74,6 +95,12 @@ export const PATCH: APIRoute = async ({ params, request }) => {
       data: updated,
     });
   } catch (err: any) {
+    if (err instanceof ConcurrencyConflictError) {
+      return jsonResponse({ success: false, error: err.message, isConflict: true }, 409);
+    }
+    if (err instanceof StatusTransitionError) {
+      return jsonResponse({ success: false, error: err.message }, 400);
+    }
     return jsonResponse({ success: false, error: 'Failed to update appointment status' }, 500);
   }
 };
