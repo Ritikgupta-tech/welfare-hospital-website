@@ -1,10 +1,15 @@
-import { PrismaClient } from '@prisma/client';
+import PrismaPkg from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import pg from 'pg';
 
+const PrismaClientClass =
+  (PrismaPkg as any)?.PrismaClient ||
+  (PrismaPkg as any)?.default?.PrismaClient ||
+  PrismaPkg;
+
 declare global {
   // eslint-disable-next-line no-var
-  var __prismaClientInstance: PrismaClient | undefined;
+  var __prismaClientInstance: any | undefined;
   // eslint-disable-next-line no-var
   var __pgPoolInstance: pg.Pool | undefined;
 }
@@ -32,7 +37,7 @@ export function getPrismaClient(): PrismaClient | null {
     global.__pgPoolInstance = pool;
 
     const adapter = new PrismaPg(pool);
-    global.__prismaClientInstance = new PrismaClient({
+    global.__prismaClientInstance = new PrismaClientClass({
       adapter,
       log: process.env.NODE_ENV === 'production' ? ['error', 'warn'] : ['error'],
     });

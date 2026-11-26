@@ -8,5 +8,8 @@ export default defineConfig({
   adapter: vercel(),
   vite: {
     plugins: [tailwindcss()],
+    ssr: {
+      external: ['pg-native'],
+    },
   },
 });
