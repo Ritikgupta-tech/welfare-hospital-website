@@ -16,7 +16,7 @@ import {
 
 interface Props {
   title: string;
-  activeNav: 'dashboard' | 'appointments' | 'patients' | 'services' | 'settings';
+  activeNav: 'dashboard' | 'appointments' | 'patients' | 'services' | 'doctors' | 'settings';
 }
 
 const { title, activeNav } = Astro.props;
@@ -25,6 +25,8 @@ const navItems = [
   { id: 'dashboard', name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
   { id: 'appointments', name: 'Appointments', href: '/admin/appointments', icon: CalendarCheck },
   { id: 'patients', name: 'Patients', href: '/admin/patients', icon: Users },
+  { id: 'services', name: 'Services', href: '/admin/services', icon: Stethoscope },
+  { id: 'doctors', name: 'Doctors', href: '/admin/doctors', icon: ShieldCheck },
   { id: 'settings', name: 'Settings & Audit', href: '/admin/settings', icon: Settings },
 ];
 ---

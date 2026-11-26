@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: welfare_hospital_web
+    restart: always
+    ports:
+      - "4321:4321"
+    environment:
+      - NODE_ENV=production
+      - PORT=4321
+      - DATABASE_URL=postgresql://welfare_user:welfare_secure_pass_2026@db:5432/welfare_hospital?sslmode=disable
+      - JWT_SECRET=welfare-hospital-secure-jwt-secret-key-2026-prod
+      - PUBLIC_SITE_URL=http://localhost:4321
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - hospital_data:/app/.data
+
+  db:
+    image: postgres:16-alpine
+    container_name: welfare_hospital_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: welfare_user
+      POSTGRES_PASSWORD: welfare_secure_pass_2026
+      POSTGRES_DB: welfare_hospital
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U welfare_user -d welfare_hospital"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  hospital_data:

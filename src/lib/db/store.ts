@@ -518,3 +518,95 @@ export async function listAuditLogs(): Promise<AuditLog[]> {
   const db = loadData();
   return db.auditLogs.slice(0, 100);
 }
+
+// ---------------- Admin Services & Doctors Management ---------------- //
+
+export async function getAllServicesAdmin(): Promise<Service[]> {
+  const db = loadData();
+  return db.services;
+}
+
+export async function createService(data: {
+  name: string;
+  category: string;
+  shortDesc: string;
+  fullDesc: string;
+  iconName?: string;
+  isPublished?: boolean;
+}): Promise<Service> {
+  const db = loadData();
+  const now = new Date().toISOString();
+  const slug = data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+  const newService: Service = {
+    id: `srv_${Date.now()}`,
+    name: data.name,
+    slug: slug || `service-${Date.now()}`,
+    category: data.category,
+    shortDesc: data.shortDesc,
+    fullDesc: data.fullDesc,
+    iconName: data.iconName || 'Stethoscope',
+    isPublished: data.isPublished !== undefined ? data.isPublished : true,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  db.services.push(newService);
+  saveData(db);
+  return newService;
+}
+
+export async function updateService(id: string, updates: Partial<Service>): Promise<Service | null> {
+  const db = loadData();
+  const service = db.services.find((s) => s.id === id);
+  if (!service) return null;
+
+  Object.assign(service, updates, { updatedAt: new Date().toISOString() });
+  saveData(db);
+  return service;
+}
+
+export async function getAllDoctorsAdmin(): Promise<Doctor[]> {
+  const db = loadData();
+  return db.doctors;
+}
+
+export async function updateDoctor(id: string, updates: Partial<Doctor>): Promise<Doctor | null> {
+  const db = loadData();
+  const doctor = db.doctors.find((d) => d.id === id);
+  if (!doctor) return null;
+
+  Object.assign(doctor, updates, { updatedAt: new Date().toISOString() });
+  saveData(db);
+  return doctor;
+}
+
+export async function createDoctor(data: {
+  name: string;
+  title: string;
+  department: string;
+  qualifications: string;
+  experienceYears?: number;
+  opdTimings: string;
+  isPublished?: boolean;
+}): Promise<Doctor> {
+  const db = loadData();
+  const now = new Date().toISOString();
+
+  const newDoctor: Doctor = {
+    id: `doc_${Date.now()}`,
+    name: data.name,
+    title: data.title,
+    department: data.department,
+    qualifications: data.qualifications,
+    experienceYears: data.experienceYears || 5,
+    opdTimings: data.opdTimings,
+    isPublished: data.isPublished !== undefined ? data.isPublished : true,
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  db.doctors.push(newDoctor);
+  saveData(db);
+  return newDoctor;
+}
