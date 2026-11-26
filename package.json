@@ -10,23 +10,30 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:migrate": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:seed": "npx tsx src/lib/db/migrate.ts",
+    "db:setup": "prisma migrate deploy && npx tsx src/lib/db/migrate.ts"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.14",
     "@astrojs/vercel": "^11.0.22",
     "@lucide/astro": "^1.55.0",
+    "@prisma/adapter-pg": "^7.10.1",
     "@prisma/client": "^7.10.1",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.8",
     "bcryptjs": "^3.0.3",
     "jsonwebtoken": "^9.0.3",
+    "pg": "^8.23.1",
     "tailwindcss": "^4.3.3",
     "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
+    "@types/pg": "^8.23.1",
     "prisma": "^7.10.1",
     "vitest": "^5.1.2"
   }

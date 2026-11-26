@@ -239,3 +239,40 @@ export async function migrateJsonToPostgres(): Promise<MigrationReport> {
 
   return report;
 }
+
+// Auto-execute if invoked directly as CLI script
+if (
+  process.argv[1] &&
+  (process.argv[1].replace(/\\/g, '/').endsWith('src/lib/db/migrate.ts') ||
+   process.argv[1].replace(/\\/g, '/').endsWith('src/lib/db/migrate.js'))
+) {
+  console.log('====================================================');
+  console.log('WELFARE HOSPITAL — POSTGRESQL DATA SEEDING UTILITY');
+  console.log('====================================================');
+  console.log(`Node Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Database Target: ${process.env.DATABASE_URL ? '[CONFIGURED]' : '[MISSING]'}`);
+
+  migrateJsonToPostgres()
+    .then((report) => {
+      console.log('\nMigration Execution Summary:');
+      console.log(`- Success: ${report.success}`);
+      console.log(`- Admin Users: ${report.adminUsersMigrated}`);
+      console.log(`- Doctors: ${report.doctorsMigrated}`);
+      console.log(`- Services: ${report.servicesMigrated}`);
+      console.log(`- Patients: ${report.patientsMigrated}`);
+      console.log(`- Appointments: ${report.appointmentsMigrated}`);
+      console.log(`- Settings: ${report.settingsMigrated}`);
+      if (report.errors.length > 0) {
+        console.error('\nErrors encountered:');
+        report.errors.forEach((e) => console.error(`  * ${e}`));
+        process.exit(1);
+      }
+      console.log('\nAll historical records successfully seeded into PostgreSQL.');
+      process.exit(0);
+    })
+    .catch((err) => {
+      console.error('Fatal unhandled error during migration:', err);
+      process.exit(1);
+    });
+}
+
