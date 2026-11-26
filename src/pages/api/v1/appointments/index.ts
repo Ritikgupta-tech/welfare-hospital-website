@@ -1,6 +1,10 @@
 import type { APIRoute } from 'astro';
-import { createAppointment, findServiceById } from '../../../../lib/db/store';
-import { generateAppointmentCreatedEmail, sendEmailNotification } from '../../../../lib/notifications/email';
+import { createAppointment, findServiceById, recordNotification } from '../../../../lib/db/store';
+import {
+  generateAppointmentCreatedEmail,
+  generateHospitalStaffAlertEmail,
+  sendEmailNotification,
+} from '../../../../lib/notifications/email';
 import { checkRateLimit, getClientIp } from '../../../../lib/security/rateLimit';
 import { jsonResponse } from '../../../../lib/security/headers';
 import { createAppointmentSchema } from '../../../../lib/validation/schemas';
@@ -53,11 +57,34 @@ export const POST: APIRoute = async ({ request }) => {
       symptomsOrNotes: data.symptomsOrNotes || null,
     });
 
-    // Fire email notification asynchronously
+    // Fire email notifications & record dispatch logs
     if (appointment.patient) {
-      const emailMsg = generateAppointmentCreatedEmail(appointment, appointment.patient, service);
-      sendEmailNotification(emailMsg).catch((err) => {
-        console.error('[Notification] Error dispatching email:', err);
+      const patientMsg = generateAppointmentCreatedEmail(appointment, appointment.patient, service);
+      sendEmailNotification(patientMsg).catch((err) => {
+        console.error('[Notification] Error dispatching patient email:', err);
+      });
+      await recordNotification({
+        recipientType: 'PATIENT',
+        recipientContact: appointment.patient.email || appointment.patient.mobile,
+        channel: 'EMAIL',
+        templateName: 'APPOINTMENT_REQUEST_RECEIVED',
+        subject: patientMsg.subject,
+        payloadJson: JSON.stringify({ reference: appointment.reference }),
+        status: 'SENT',
+      });
+
+      const staffMsg = generateHospitalStaffAlertEmail(appointment, appointment.patient, service);
+      sendEmailNotification(staffMsg).catch((err) => {
+        console.error('[Notification] Error dispatching staff email:', err);
+      });
+      await recordNotification({
+        recipientType: 'CLINIC_STAFF',
+        recipientContact: staffMsg.to,
+        channel: 'EMAIL',
+        templateName: 'STAFF_NEW_APPOINTMENT_ALERT',
+        subject: staffMsg.subject,
+        payloadJson: JSON.stringify({ reference: appointment.reference, patient: appointment.patient.fullName }),
+        status: 'SENT',
       });
     }
 

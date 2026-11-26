@@ -98,6 +98,48 @@ For queries or immediate help, please call +91 8490068558.
   };
 }
 
+export function generateHospitalStaffAlertEmail(
+  appointment: Appointment,
+  patient: Patient,
+  service: Service
+): EmailMessage {
+  const subject = `[STAFF ALERT] New Appointment Request: ${appointment.reference} (${patient.fullName})`;
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: -apple-system, sans-serif; background-color: #f5f8fa; padding: 24px;">
+  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; border: 1px solid #e2e8f0; padding: 28px;">
+    <div style="background-color: #102a43; padding: 16px; border-radius: 8px; color: white; margin-bottom: 20px;">
+      <h2 style="margin: 0; font-size: 18px;">Welfare Hospital &mdash; Reception Dispatch Alert</h2>
+    </div>
+    <p>A new outpatient consultation request has been submitted through the public portal:</p>
+    <ul>
+      <li><strong>Reference:</strong> ${appointment.reference}</li>
+      <li><strong>Patient Name:</strong> ${patient.fullName}</li>
+      <li><strong>Phone:</strong> <a href="tel:${patient.mobile}">+91 ${patient.mobile}</a></li>
+      <li><strong>Service:</strong> ${service.name}</li>
+      <li><strong>Requested Slot:</strong> ${appointment.preferredDate} (${appointment.preferredTimeSlot})</li>
+      <li><strong>Patient Notes:</strong> ${appointment.symptomsOrNotes || 'None'}</li>
+    </ul>
+    <p style="margin-top: 20px;">
+      <a href="https://welfare-hospital-website.vercel.app/admin/appointments" style="background-color: #087f8c; color: white; padding: 10px 18px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 13px;">
+        Open Admin Portal to Confirm
+      </a>
+    </p>
+  </div>
+</body>
+</html>
+`;
+
+  return {
+    to: process.env.NOTIFICATION_EMAIL || 'desk@welfarehospital.com',
+    subject,
+    html,
+    text: `New appointment ${appointment.reference} from ${patient.fullName} (${patient.mobile}). Service: ${service.name}. Slot: ${appointment.preferredDate}.`,
+  };
+}
+
 export function generateAppointmentStatusUpdateEmail(
   appointment: Appointment,
   patient: Patient,

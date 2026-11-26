@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { extractBearerToken, extractCookieToken, verifyToken } from '../../../../../lib/auth/jwt';
-import { getAppointmentById, updateAppointmentStatus } from '../../../../../lib/db/store';
+import { getAppointmentById, recordNotification, updateAppointmentStatus } from '../../../../../lib/db/store';
 import { generateAppointmentStatusUpdateEmail, sendEmailNotification } from '../../../../../lib/notifications/email';
 import { jsonResponse } from '../../../../../lib/security/headers';
 import { updateAppointmentStatusSchema } from '../../../../../lib/validation/schemas';
@@ -56,6 +56,16 @@ export const PATCH: APIRoute = async ({ params, request }) => {
     if (updated.patient && updated.service) {
       const emailMsg = generateAppointmentStatusUpdateEmail(updated, updated.patient, updated.service, status, notes);
       sendEmailNotification(emailMsg).catch((e) => console.error('[Notification] Status update email error:', e));
+
+      await recordNotification({
+        recipientType: 'PATIENT',
+        recipientContact: updated.patient.email || updated.patient.mobile,
+        channel: 'EMAIL',
+        templateName: `STATUS_${status}`,
+        subject: emailMsg.subject,
+        payloadJson: JSON.stringify({ reference: updated.reference, status, notes }),
+        status: 'SENT',
+      });
     }
 
     return jsonResponse({

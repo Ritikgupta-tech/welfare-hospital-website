@@ -50,6 +50,17 @@ function loadData(): DatabaseData {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf-8');
       cachedData = JSON.parse(raw);
+      if (cachedData) {
+        cachedData.adminUsers = cachedData.adminUsers || [];
+        cachedData.patients = cachedData.patients || [];
+        cachedData.doctors = cachedData.doctors || [];
+        cachedData.services = cachedData.services || [];
+        cachedData.appointments = cachedData.appointments || [];
+        cachedData.statusHistories = cachedData.statusHistories || [];
+        cachedData.notifications = cachedData.notifications || [];
+        cachedData.settings = cachedData.settings || [];
+        cachedData.auditLogs = cachedData.auditLogs || [];
+      }
       return cachedData!;
     }
   } catch (err) {
@@ -517,6 +528,39 @@ export async function listPatients(): Promise<Patient[]> {
 export async function listAuditLogs(): Promise<AuditLog[]> {
   const db = loadData();
   return db.auditLogs.slice(0, 100);
+}
+
+export async function recordNotification(data: {
+  recipientType: 'PATIENT' | 'CLINIC_STAFF';
+  recipientContact: string;
+  channel: 'EMAIL' | 'SMS' | 'WHATSAPP';
+  templateName: string;
+  subject: string;
+  payloadJson?: string;
+  status?: 'SENT' | 'PENDING' | 'FAILED';
+}): Promise<NotificationRecord> {
+  const db = loadData();
+  const now = new Date().toISOString();
+  const notif: NotificationRecord = {
+    id: `notif_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+    recipientType: data.recipientType,
+    recipientContact: data.recipientContact,
+    channel: data.channel,
+    templateName: data.templateName,
+    subject: data.subject,
+    payloadJson: data.payloadJson || '{}',
+    status: data.status || 'SENT',
+    sentAt: now,
+    createdAt: now,
+  };
+  db.notifications.unshift(notif);
+  saveData(db);
+  return notif;
+}
+
+export async function listNotificationsAdmin(): Promise<NotificationRecord[]> {
+  const db = loadData();
+  return db.notifications.slice(0, 100);
 }
 
 // ---------------- Admin Services & Doctors Management ---------------- //

@@ -1,6 +1,6 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { Settings, ShieldCheck, MapPin, Phone, Clock, FileText, CheckCircle2 } from '@lucide/astro';
+import { Settings, ShieldCheck, MapPin, Phone, Clock, FileText, CheckCircle2, Mail, Bell } from '@lucide/astro';
 
 export const prerender = false;
 ---
@@ -71,6 +71,43 @@ export const prerender = false;
       </div>
     </div>
 
+    <!-- Full-Width Bottom Section: Notification Dispatch History -->
+    <div class="lg:col-span-12 bg-white rounded-2xl p-6 border border-slate-200/90 shadow-xs space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div>
+          <h3 class="text-sm font-bold text-hospital-navy uppercase tracking-wider flex items-center gap-2">
+            <Mail class="w-4 h-4 text-hospital-teal" />
+            Automated Notification Dispatch Ledger
+          </h3>
+          <p class="text-xs text-slate-500">Live dispatch tracking for appointment confirmations, patient status notices, and hospital staff alerts</p>
+        </div>
+        <button id="refresh-notifications-btn" type="button" class="text-xs font-bold text-hospital-teal hover:underline">
+          Refresh
+        </button>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-slate-200 text-slate-400 uppercase text-[10px] tracking-wider">
+              <th class="py-2.5 px-3 font-semibold">Timestamp</th>
+              <th class="py-2.5 px-3 font-semibold">Channel</th>
+              <th class="py-2.5 px-3 font-semibold">Recipient Type</th>
+              <th class="py-2.5 px-3 font-semibold">Recipient Contact</th>
+              <th class="py-2.5 px-3 font-semibold">Template</th>
+              <th class="py-2.5 px-3 font-semibold">Subject</th>
+              <th class="py-2.5 px-3 font-semibold">Status</th>
+            </tr>
+          </thead>
+          <tbody id="notifications-table-body" class="divide-y divide-slate-100">
+            <tr>
+              <td colspan="7" class="text-center text-slate-400 py-6">Loading notification dispatches...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -110,7 +147,62 @@ export const prerender = false;
       }
     }
 
+    async function loadNotifications() {
+      const tbody = document.getElementById('notifications-table-body');
+      if (!tbody) return;
+
+      try {
+        const res = await fetch('/api/v1/admin/notifications');
+        if (!res.ok) throw new Error('Failed to load notifications');
+        const json = await res.json();
+        const notifications = json.data || [];
+
+        if (notifications.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" class="text-center text-slate-400 py-6">No notification dispatches recorded yet.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = notifications
+          .map(
+            (notif: any) => `
+            <tr class="hover:bg-slate-50/80 transition-colors">
+              <td class="py-2.5 px-3 font-mono text-[11px] text-slate-500 whitespace-nowrap">
+                ${notif.createdAt ? notif.createdAt.replace('T', ' ').substring(0, 19) : '-'}
+              </td>
+              <td class="py-2.5 px-3">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-700">
+                  ${notif.channel}
+                </span>
+              </td>
+              <td class="py-2.5 px-3 font-semibold text-slate-700">
+                ${notif.recipientType === 'CLINIC_STAFF' ? '<span class="text-purple-700">Staff Alert</span>' : '<span class="text-emerald-700">Patient</span>'}
+              </td>
+              <td class="py-2.5 px-3 font-mono text-slate-600">
+                ${notif.recipientContact}
+              </td>
+              <td class="py-2.5 px-3 font-mono text-[11px] text-slate-600">
+                ${notif.templateName}
+              </td>
+              <td class="py-2.5 px-3 text-hospital-navy font-medium max-w-xs truncate" title="${notif.subject}">
+                ${notif.subject}
+              </td>
+              <td class="py-2.5 px-3">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-emerald-50 text-emerald-700">
+                  ${notif.status}
+                </span>
+              </td>
+            </tr>
+          `
+          )
+          .join('');
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center text-rose-600 py-6">Failed to retrieve notifications.</td></tr>';
+      }
+    }
+
     document.getElementById('refresh-audit-btn')?.addEventListener('click', loadAuditLogs);
+    document.getElementById('refresh-notifications-btn')?.addEventListener('click', loadNotifications);
     loadAuditLogs();
+    loadNotifications();
   </script>
 </AdminLayout>
