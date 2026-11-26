@@ -316,9 +316,10 @@ export async function createAppointment(data: {
   const existingPending = db.appointments.find(
     (a) =>
       a.status === 'PENDING' &&
+      a.patientId === patient.id &&
+      a.serviceId === service.id &&
       a.preferredDate === data.preferredDate &&
-      a.createdAt >= fiveMinutesAgo &&
-      (a.patientId === patient.id || (patient.mobile && patient.mobile === data.mobile))
+      a.createdAt >= fiveMinutesAgo
   );
   if (existingPending) {
     return {

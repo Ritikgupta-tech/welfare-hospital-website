@@ -33,9 +33,10 @@ describe('Role-Based Authorization & Privacy Boundary Tests', () => {
 
   it('masks patient phone numbers and emails on public reference lookups to protect patient privacy', async () => {
     const today = new Date().toISOString().split('T')[0];
+    const uniquePhone = `98${Math.floor(10000000 + Math.random() * 90000000)}`;
     const apt = await createAppointment({
       fullName: 'Suresh Chandra Gupta',
-      mobile: '9876543210',
+      mobile: uniquePhone,
       email: 'suresh.gupta@example.com',
       serviceId: 'primary-healthcare',
       preferredDate: today,
@@ -44,8 +45,9 @@ describe('Role-Based Authorization & Privacy Boundary Tests', () => {
 
     const publicLookup = await findAppointmentByReference(apt.reference);
     expect(publicLookup).not.toBeNull();
-    // Mobile must be masked as 98******10
-    expect(publicLookup?.patient?.mobile).toBe('98******10');
+    // Mobile must be masked with first 2 and last 2 digits
+    const expectedMasked = uniquePhone.substring(0, 2) + '******' + uniquePhone.substring(8);
+    expect(publicLookup?.patient?.mobile).toBe(expectedMasked);
     // Name must be masked
     expect(publicLookup?.patient?.fullName).not.toBe('Suresh Chandra Gupta');
     expect(publicLookup?.patient?.fullName).toContain('*');
