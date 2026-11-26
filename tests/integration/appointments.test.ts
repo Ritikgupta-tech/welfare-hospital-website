@@ -10,11 +10,12 @@ import {
 describe('Appointment & Database Lifecycle Integration Tests', () => {
   it('executes full end-to-end appointment lifecycle', async () => {
     const today = new Date().toISOString().split('T')[0];
+    const uniquePhone = `98${Math.floor(10000000 + Math.random() * 90000000)}`;
 
     // 1. Patient creates appointment
     const appointment = await createAppointment({
       fullName: 'Aarav Sharma',
-      mobile: '9876543210',
+      mobile: uniquePhone,
       email: 'aarav@example.com',
       serviceId: 'physician-consultations',
       preferredDate: today,
@@ -32,7 +33,8 @@ describe('Appointment & Database Lifecycle Integration Tests', () => {
     expect(publicLookup).not.toBeNull();
     expect(publicLookup?.reference).toBe(appointment.reference);
     expect(publicLookup?.status).toBe('PENDING');
-    expect(publicLookup?.patient?.mobile).toBe('98******10'); // masked for privacy
+    const expectedMasked = uniquePhone.substring(0, 2) + '******' + uniquePhone.substring(8);
+    expect(publicLookup?.patient?.mobile).toBe(expectedMasked); // masked for privacy
 
     // 3. Admin updates status to CONFIRMED
     const updated = await updateAppointmentStatus(
