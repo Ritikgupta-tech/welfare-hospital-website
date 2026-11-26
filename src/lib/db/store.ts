@@ -54,7 +54,7 @@ function loadData(): DatabaseData {
         cachedData.adminUsers = cachedData.adminUsers || [];
         // Ensure super admin has valid hash for WelfareHospital@2026
         const admin = cachedData.adminUsers.find((u) => u.email === 'admin@welfarehospital.com');
-        if (admin && admin.passwordHash.startsWith('$2a$12$e63h7e8oIuNskpQ6eYfS')) {
+        if (admin && !admin.passwordHash.startsWith('$2b$10$IKaAHa')) {
           admin.passwordHash = '$2b$10$IKaAHa/mbmGmzKzxt4m8Ku4rNS9C3VsIRiKeDtRtahpWnNnm8ACjq';
         }
         cachedData.patients = cachedData.patients || [];
